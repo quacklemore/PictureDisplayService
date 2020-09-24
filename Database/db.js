@@ -26,4 +26,4 @@ const saveOnePhoto = (url, date, user) {
       console.log(`Success! The photo document [${newPhoto}] was successfully added to the database!`);
     }
   })
-}
+};
