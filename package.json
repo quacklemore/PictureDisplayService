@@ -1,0 +1,33 @@
+{
+  "name": "PictureDisplayService",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon Server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quacklemore/PictureDisplayService.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quacklemore/PictureDisplayService/issues"
+  },
+  "homepage": "https://github.com/quacklemore/PictureDisplayService#readme",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "babel": "^6.23.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.6.2",
+    "mongoose": "^5.10.6",
+    "nodemon": "^2.0.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "styled-components": "^5.2.0",
+    "webpack": "^4.44.2"
+  }
+}
