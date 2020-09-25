@@ -1,10 +1,9 @@
-con mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const db = require('./db.js');
 
 const pictureSchema = new mongoose.Schema({
-  _id: Number,
 	imgUrl: String,
-  uploadDate: Number,
+  uploadDate: Date,
 	user: String
 });
 
