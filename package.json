@@ -4,8 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --detectOpenHandles",
     "start": "nodemon Server/server.js"
+  },
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "node"
   },
   "repository": {
     "type": "git",
@@ -22,6 +26,7 @@
     "axios": "^0.20.0",
     "babel": "^6.23.0",
     "express": "^4.17.1",
+    "jest": "^26.4.2",
     "mongodb": "^3.6.2",
     "mongoose": "^5.10.6",
     "nodemon": "^2.0.4",
@@ -29,5 +34,8 @@
     "react-dom": "^16.13.1",
     "styled-components": "^5.2.0",
     "webpack": "^4.44.2"
+  },
+  "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.3"
   }
 }
