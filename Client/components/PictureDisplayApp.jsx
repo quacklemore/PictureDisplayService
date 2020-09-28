@@ -1,4 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
+
+import MainPic from './mainPic.jsx';
+import GridPics from './gridPics.jsx';
+import SidebarPics from './sidebarPics.jsx';
 
 
 class PictureDisplayApp extends React.Component {
@@ -9,8 +14,18 @@ class PictureDisplayApp extends React.Component {
   render () {
 
     return (
-      <div>
-        <h1>Here I am, on a page. </h1>
+      <div className="picture-container">
+        <div id="picture-mainViewer">
+          <MainPic />
+        </div>
+        <div id="picture-miniGrid">
+          <GridPics />
+        </div>
+
+        <div id="picture-sideGrid">
+          <SidebarPics />
+        </div>
+
       </div>
     );
   }
