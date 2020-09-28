@@ -6,8 +6,8 @@ const port = 4000;
 app.use(express.static(__dirname + '/../public/'));
 app.use(express.json())
 
-app.get('/api/pictures/', (req, res) => {
-  console.log('get GET request for pictures');
+app.post('/api/pictures/', (req, res) => {
+  console.log('get POST request for pictures');
   let data = req.body;
 
   Photo.find({ hotel: data.hotel})

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 import MainPic from './mainPic.jsx';
 import GridPics from './gridPics.jsx';
@@ -45,6 +46,37 @@ const PictureSideGrid = styled.div`
 class PictureDisplayApp extends React.Component {
   constructor (props) {
     super(props);
+    this.state = {
+      currentHotel: 'hotel0',
+      photos: [],
+      users: []
+    }
+  }
+
+  getPhotos() {
+    axios.post('/api/pictures/', {
+      "hotel": this.state.currentHotel
+    })
+    .then((data) => {
+      let userArray = [];
+      console.log(data);
+      data.data.map((photo) => {
+        userArray.push(photo.user);
+      })
+      this.setState({
+        photos: data.data,
+        users: userArray
+      })
+      console.log(this.state.photos);
+      console.log(this.state.users);
+    })
+    .catch((err) => {
+      throw err;
+    })
+  }
+
+  componentDidMount () {
+    this.getPhotos();
   }
 
   render () {
