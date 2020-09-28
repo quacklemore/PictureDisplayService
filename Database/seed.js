@@ -19,7 +19,7 @@ const seed = () => {
   let pictures = [];
 
   for (let i = 0; i < 100; i++) {
-    let hotelName = faker.company.companyName();
+    let hotelName = 'hotel' + i;
     let randNum = Math.floor(Math.random() * 58);
 
     for (let x = 1; x <= randNum; x++) {
@@ -37,6 +37,9 @@ const seed = () => {
   Promise.all(pictures)
   .then(result => {
     mongoose.connection.close();
+  })
+  .catch((err) => {
+    throw err;
   })
 
 }
