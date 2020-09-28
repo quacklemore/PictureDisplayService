@@ -6,6 +6,9 @@ const pictureSchema = new mongoose.Schema({
   uploadDate: Date,
   user: String,
   hotel: String
+},
+{
+  timeStamp: true
 });
 
 const Photo = mongoose.model('Photo', pictureSchema);

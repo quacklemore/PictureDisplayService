@@ -1,11 +1,21 @@
 const express = require('express');
+const Photo = require('./../Database/Photo.js')
 const app = express();
 const port = 4000;
 
 app.use(express.static(__dirname + '/public'));
+app.use(express.json())
 
-app.get('/pictures', (req, res) => {
-  res.send(`got it in ${req.url} at port ${port}`);
+app.get('/api/pictures/', (req, res) => {
+  console.log('get GET request for pictures');
+  let data = req.body;
+
+  Photo.find({ hotel: data.hotel})
+  .then((results) => {
+
+    res.send(results);
+  })
+
 })
 
 app.listen(port, () => {
