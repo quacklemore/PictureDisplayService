@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import _ from 'underscore';
 
 import MainPic from './mainPic.jsx';
 import GridPics from './gridPics.jsx';
@@ -49,7 +50,10 @@ class PictureDisplayApp extends React.Component {
     this.state = {
       currentHotel: 'hotel0',
       photos: [],
-      users: []
+      users: [],
+      mainPhoto: {},
+      miniGrid: [],
+      sideBarGrid: []
     }
   }
 
@@ -59,16 +63,24 @@ class PictureDisplayApp extends React.Component {
     })
     .then((data) => {
       let userArray = [];
-      console.log(data);
+      let tagsArray = [];
+      let miniGrid = data.data.slice(0, 10);
+      let sidebarNeeds = [];
       data.data.map((photo) => {
         userArray.push(photo.user);
+        tagsArray.push(photo.tag);
+        userArray = _.uniq(userArray).sort();
+        tagsArray = _.uniq(tagsArray).sort();
       })
+      console.log(userArray, tagsArray);
+      sidebarNeeds.push(userArray, tagsArray, data.data.special);
       this.setState({
         photos: data.data,
-        users: userArray
+        users: userArray,
+        mainPhoto: data.data[0],
+        miniGrid: miniGrid,
+        sideBarGrid: tagsArray
       })
-      console.log(this.state.photos);
-      console.log(this.state.users);
     })
     .catch((err) => {
       throw err;
@@ -84,15 +96,14 @@ class PictureDisplayApp extends React.Component {
     return (
       <PictureContainer>
         <PictureMainViewer>
-          <MainPic />
+          <MainPic photo={this.mainPhoto}/>
         </PictureMainViewer>
         <PictureMiniGrid>
-          <GridPics />
+          <GridPics picsArray={this.miniGrid}/>
         </PictureMiniGrid>
         <PictureSideGrid>
-          <SidebarPics />
+          <SidebarPics catagories={this.sideBarGrid}/>
         </PictureSideGrid>
-
       </PictureContainer>
     );
   }

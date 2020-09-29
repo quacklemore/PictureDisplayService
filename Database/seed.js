@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const db = require('./db.js');
 const faker = require('faker');
 const Photo = require('./Photo.js');
@@ -21,13 +22,18 @@ const seed = () => {
   for (let i = 0; i < 100; i++) {
     let hotelName = 'hotel' + i;
     let randNum = Math.floor(Math.random() * 58);
+    let bool = (Math.random() > 0.5) ? true : false;
 
     for (let x = 1; x <= randNum; x++) {
+      let tags = ['dogs', 'beach', 'sunshine', 'wonderful', 'goodFood', 'happy'];
+      let tagsNum = Math.floor(Math.random() * 6);
       let image = {};
       image.imgUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/${x}.jpg`;
       image.uploadDate = new Date();
       image.user = faker.name.firstName() + faker.name.lastName();
       image.hotel = hotelName;
+      image.tag = tags[tagsNum];
+      image.special = bool;
 
       pictures.push(saveOnePhoto(image));
     }
