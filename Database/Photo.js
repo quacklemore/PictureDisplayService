@@ -5,7 +5,9 @@ const pictureSchema = new mongoose.Schema({
   imgUrl: String,
   uploadDate: Date,
   user: String,
-  hotel: String
+  hotel: String,
+  tag: String,
+  special: Boolean
 },
 {
   timeStamp: true
