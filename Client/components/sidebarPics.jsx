@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SidebarPics = () => {
+const SidebarPics = (props) => {
 
   return (
     <div>
