@@ -6,6 +6,7 @@ const React = require('react');
 const renderer = require('react-test-renderer');
 const axios = require('axios');
 const { setup: setupDevServer } = require('jest-dev-server');
+const act = require('react-dom/test-utils');
 
 // const PictureDisplayApp = require('./../Client/components/PictureDisplayApp.jsx');
 // const MainPic = require('./../Client/componentsmainPic.jsx');

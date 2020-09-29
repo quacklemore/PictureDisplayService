@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MainPic = () => {
+const MainPic = (props) => {
 
   return (
     <div>

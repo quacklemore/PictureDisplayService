@@ -8,7 +8,7 @@ import GridPics from './gridPics.jsx';
 import SidebarPics from './sidebarPics.jsx';
 
 //Styling
-const PictureContainer = styled.div`
+const PictureAndGridContainer = styled.div`
 display: grid;
 grid-template-columns: repeat(13, 60px, [col-start]);
 grid-template-rows: repeat(10, 50px, [row-start]);
@@ -26,6 +26,26 @@ grid-template-areas:
 "main main main main main main main main main main viewOptions viewOptions viewOptions"
 "gallery gallery gallery gallery gallery gallery gallery gallery gallery gallery viewOptions viewOptions viewOptions"
 "gallery gallery gallery gallery gallery gallery gallery gallery gallery gallery viewOptions viewOptions viewOptions";
+`
+
+const PictureNoGalleryContainer = styled.div`
+display: grid;
+grid-template-columns: repeat(13, 60px, [col-start]);
+grid-template-rows: repeat(10, 50px, [row-start]);
+background-color: green;
+width: 818px;
+height: 481px;
+grid-template-areas:
+"main main main main main main main main main main viewOptions viewOptions viewOptions"
+"main main main main main main main main main main viewOptions viewOptions viewOptions"
+"main main main main main main main main main main viewOptions viewOptions viewOptions"
+"main main main main main main main main main main viewOptions viewOptions viewOptions"
+"main main main main main main main main main main viewOptions viewOptions viewOptions"
+"main main main main main main main main main main viewOptions viewOptions viewOptions"
+"main main main main main main main main main main viewOptions viewOptions viewOptions"
+"main main main main main main main main main main viewOptions viewOptions viewOptions"
+"main main main main main main main main main main viewOptions viewOptions viewOptions"
+"main main main main main main main main main main viewOptions viewOptions viewOptions";
 `
 
 const PictureMainViewer = styled.div`
@@ -72,7 +92,7 @@ class PictureDisplayApp extends React.Component {
         userArray = _.uniq(userArray).sort();
         tagsArray = _.uniq(tagsArray).sort();
       })
-      console.log(userArray, tagsArray);
+      console.log(data.data.length);
       sidebarNeeds.push(userArray, tagsArray, data.data.special);
       this.setState({
         photos: data.data,
@@ -91,10 +111,21 @@ class PictureDisplayApp extends React.Component {
     this.getPhotos();
   }
 
-  render () {
-
-    return (
-      <PictureContainer>
+  renderingChoices () {
+    if (this.state.photos.length < 20) {
+      return (
+      <PictureNoGalleryContainer>
+        <PictureMainViewer>
+          <MainPic photo={this.mainPhoto}/>
+        </PictureMainViewer>
+        <PictureSideGrid>
+          <SidebarPics catagories={this.sideBarGrid}/>
+        </PictureSideGrid>
+      </PictureNoGalleryContainer>
+      )
+    } else {
+      return (
+        <PictureAndGridContainer>
         <PictureMainViewer>
           <MainPic photo={this.mainPhoto}/>
         </PictureMainViewer>
@@ -104,7 +135,17 @@ class PictureDisplayApp extends React.Component {
         <PictureSideGrid>
           <SidebarPics catagories={this.sideBarGrid}/>
         </PictureSideGrid>
-      </PictureContainer>
+      </PictureAndGridContainer>
+      )
+    }
+  }
+
+  render () {
+
+    return (
+      <div className="pictureModule">
+        {this.renderingChoices()}
+      </div>
     );
   }
 
