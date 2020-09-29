@@ -1,0 +1,12 @@
+version: 2.1
+  jobs:
+    build:
+      docker:
+        - image: alpine:3.7
+      steps:
+        - run:
+            name: start-server
+            command: 'npm run server'
+        - run:
+            name: test
+            command: 'npm run test'
