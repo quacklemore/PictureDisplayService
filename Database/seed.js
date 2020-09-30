@@ -28,7 +28,9 @@ const seed = () => {
       let tags = ['dogs', 'beach', 'sunshine', 'wonderful', 'goodFood', 'happy'];
       let tagsNum = Math.floor(Math.random() * 6);
       let image = {};
-      image.imgUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/${x}.jpg`;
+      image.imgMainUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/main${x}.jpg`;
+      image.imgFullUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/full${x}.jpg`;
+      image.imgThumbUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/thumb${x}.jpg`;
       image.uploadDate = new Date();
       image.user = faker.name.firstName() + faker.name.lastName();
       image.hotel = hotelName;

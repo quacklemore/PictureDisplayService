@@ -47,7 +47,9 @@ describe('Checking calls to the server to return expected values', () => {
       "hotel": "hotel0" //PLEASE CHANGE THIS IF YOU ARE TESTING WITH SPECIFIC HOTELS
     })
     .then((data) => {
-      expect(data.data[0].imgUrl).toBeDefined();
+      expect(data.data[0].imgMainUrl).toBeDefined();
+      expect(data.data[0].imgFullUrl).toBeDefined();
+      expect(data.data[0].imgThumbUrl).toBeDefined();
       expect(data.data[0].user).toBeDefined();
       expect(data.data[0].hotel).toBeDefined();
       expect(data.data[0].tag).toBeDefined();
