@@ -1,13 +1,11 @@
 import React from 'react';
 
-const MainPic = (props) => {
-
+const PictureMainViewer = (props) => {
+  // console.log(props.photo, props.photos)
   return (
-    <div>
-      <h1>MainPic here!</h1>
-    </div>
+    <img src={props.photo} width="600px"/>
   )
 
 }
 
-export default MainPic;
+export default PictureMainViewer;

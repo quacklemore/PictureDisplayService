@@ -77,49 +77,44 @@ class PictureDisplayApp extends React.Component {
     }
   }
 
-  getPhotos() {
-    axios.post('/api/pictures/', {
-      "hotel": this.state.currentHotel
+  componentDidMount () {
+    axios('/api/pictures/', {
+      method: 'POST',
+      data: {
+        "hotel": this.state.currentHotel
+      }
     })
-    .then((data) => {
-      let userArray = [];
-      let tagsArray = [];
-      let miniGrid = data.data.slice(0, 10);
-      let sidebarNeeds = [];
-      data.data.map((photo) => {
-        userArray.push(photo.user);
-        tagsArray.push(photo.tag);
-        userArray = _.uniq(userArray).sort();
-        tagsArray = _.uniq(tagsArray).sort();
+    .then((res) => {
+      console.log("Got the response:", res.data[0].imgUrl);
+      let tagArr = [];
+      let userArr = [];
+      this.setState({ photos: res.data });
+      this.setState({ mainPhoto: res.data[0].imgUrl })
+      this.setState({ miniGrid: res.data.slice(0, 20) })
+      res.data.map((photoObj) => {
+        userArr.push(photoObj.user);
+        tagArr.push(photoObj.tag);
+        userArr = _.uniq(userArr).sort();
+        tagArr = _.uniq(tagArr).sort();
       })
-      console.log(data.data.length);
-      sidebarNeeds.push(userArray, tagsArray, data.data.special);
-      this.setState({
-        photos: data.data,
-        users: userArray,
-        mainPhoto: data.data[0],
-        miniGrid: miniGrid,
-        sideBarGrid: tagsArray
-      })
+      this.setState({ sideBarGrid: [userArr, tagArr, res.data[0].special] })
+
     })
     .catch((err) => {
       throw err;
     })
   }
 
-  componentDidMount () {
-    this.getPhotos();
-  }
-
   renderingChoices () {
+
     if (this.state.photos.length < 20) {
       return (
       <PictureNoGalleryContainer>
         <PictureMainViewer>
-          <MainPic photo={this.mainPhoto}/>
+          <MainPic photo={this.state.mainPhoto}/>
         </PictureMainViewer>
         <PictureSideGrid>
-          <SidebarPics catagories={this.sideBarGrid}/>
+          <SidebarPics catagories={this.state.sideBarGrid}/>
         </PictureSideGrid>
       </PictureNoGalleryContainer>
       )
@@ -127,13 +122,13 @@ class PictureDisplayApp extends React.Component {
       return (
         <PictureAndGridContainer>
         <PictureMainViewer>
-          <MainPic photo={this.mainPhoto}/>
+          <MainPic photo={this.state.mainPhoto}/>
         </PictureMainViewer>
         <PictureMiniGrid>
-          <GridPics picsArray={this.miniGrid}/>
+          <GridPics picsArray={this.state.miniGrid}/>
         </PictureMiniGrid>
         <PictureSideGrid>
-          <SidebarPics catagories={this.sideBarGrid}/>
+          <SidebarPics catagories={this.state.sideBarGrid}/>
         </PictureSideGrid>
       </PictureAndGridContainer>
       )

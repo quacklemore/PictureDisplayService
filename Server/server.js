@@ -9,7 +9,7 @@ app.use(express.json())
 app.post('/api/pictures/', (req, res) => {
   console.log('get POST request for pictures');
   let data = req.body;
-
+  console.log(data);
   Photo.find({ hotel: data.hotel})
   .then((results) => {
 
