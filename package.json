@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --detectOpenHandles",
     "start": "nodemon Server/server.js",
-    "dbSetup": "node Database/seed.js",
+    "seeddb": "node Database/seed.js",
     "build": "webpack -d --watch",
     "server": "node Server/server.js"
   },

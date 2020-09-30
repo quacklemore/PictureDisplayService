@@ -1,8 +1,8 @@
-version: 2.1
+version: 2, 2.1.
   jobs:
     build:
       steps:
-        -checkout
+          -checkout
         -run:
             name: start-server
             command: 'npm run server'
