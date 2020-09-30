@@ -6,60 +6,76 @@ import _ from 'underscore';
 import MainPic from './mainPic.jsx';
 import GridPics from './gridPics.jsx';
 import SidebarPics from './sidebarPics.jsx';
+import Thumbnail from './thumbnail.jsx';
 
 //Styling
-const PictureAndGridContainer = styled.div`
-display: grid;
-grid-template-columns: repeat(13, 60px, [col-start]);
-grid-template-rows: repeat(10, 50px, [row-start]);
-background-color: green;
-width: 818px;
-height: 481px;
-grid-template-areas:
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"gallery gallery gallery gallery gallery gallery gallery gallery gallery gallery viewOptions viewOptions viewOptions"
-"gallery gallery gallery gallery gallery gallery gallery gallery gallery gallery viewOptions viewOptions viewOptions";
-`
 
-const PictureNoGalleryContainer = styled.div`
-display: grid;
-grid-template-columns: repeat(13, 60px, [col-start]);
-grid-template-rows: repeat(10, 50px, [row-start]);
-background-color: green;
-width: 818px;
-height: 481px;
-grid-template-areas:
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions"
-"main main main main main main main main main main viewOptions viewOptions viewOptions";
-`
+const PictureContainer = styled.div`
+display: flex;
+flex-direction: row;
+flex-wrap: nowrap;
+justify-content: flex-start;
+align-items: stretch;
+`;
+
+/* // const PictureAndGridContainer = styled.div`
+// display: grid;
+// grid-template-columns: repeat(13, 60px, [col-start]);
+// grid-template-rows: repeat(10, 50px, [row-start]);
+// background-color: green;
+// width: 818px;
+// height: 481px;
+// grid-template-areas:
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "gallery gallery gallery gallery gallery gallery gallery gallery gallery gallery viewOptions viewOptions viewOptions"
+// "gallery gallery gallery gallery gallery gallery gallery gallery gallery gallery viewOptions viewOptions viewOptions";
+// `
+
+// const PictureNoGalleryContainer = styled.div`
+// display: grid;
+// grid-template-columns: repeat(13, 60px, [col-start]);
+// grid-template-rows: repeat(10, 50px, [row-start]);
+// background-color: green;
+// width: 818px;
+// height: 481px;
+// grid-template-areas:
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions"
+// "main main main main main main main main main main viewOptions viewOptions viewOptions";
+// ` */
 
 const PictureMainViewer = styled.div`
-  grid-area: main;
-  background-color: teal;
-`
+  background-color: white;
+  width: 600px;
+  border: 2px solid white;
+`;
 
 const PictureMiniGrid = styled.div`
-  grid-area: gallery;
-  background-color: orange;
-`
+  display: grid;
+  grid-template-columns: repeat(10, 58px, [col-start]);
+  grid-template-rows: repeat(2, 50px, [row-start]);
+  margin-top: 2px;
+  background-color: white;
+  grid-template-areas:
+  "grid0 grid1 grid2 grid3 grid4 grid5 grid6 grid7 grid8 grid9 "
+  "grid10 grid11 grid12 grid13 grid14 grid15 grid16 grid17 grid18 grid19";
+`;
 
 const PictureSideGrid = styled.div`
-  grid-area: viewOptions;
   background-color: blueviolet;
 `;
 
@@ -71,10 +87,18 @@ class PictureDisplayApp extends React.Component {
       currentHotel: 'hotel0',
       photos: [],
       users: [],
-      mainPhoto: {},
+      mainPhoto: '',
       miniGrid: [],
       sideBarGrid: []
     }
+  }
+
+  changeMainPic (event) {
+    let newMain = this.state.photos[event.target.id].imgMainUrl;
+    // console.log(newMain);
+    this.setState({
+      mainPhoto: newMain
+    });
   }
 
   componentDidMount () {
@@ -85,11 +109,11 @@ class PictureDisplayApp extends React.Component {
       }
     })
     .then((res) => {
-      console.log("Got the response:", res.data[0].imgUrl);
+      // console.log("Got the response:", res.data[0]);
       let tagArr = [];
       let userArr = [];
       this.setState({ photos: res.data });
-      this.setState({ mainPhoto: res.data[0].imgUrl })
+      this.setState({ mainPhoto: res.data[0].imgMainUrl })
       this.setState({ miniGrid: res.data.slice(0, 20) })
       res.data.map((photoObj) => {
         userArr.push(photoObj.user);
@@ -106,31 +130,46 @@ class PictureDisplayApp extends React.Component {
   }
 
   renderingChoices () {
+    // console.log(this.state.photos);
 
     if (this.state.photos.length < 20) {
       return (
-      <PictureNoGalleryContainer>
+      <PictureContainer>
         <PictureMainViewer>
           <MainPic photo={this.state.mainPhoto}/>
         </PictureMainViewer>
         <PictureSideGrid>
           <SidebarPics catagories={this.state.sideBarGrid}/>
         </PictureSideGrid>
-      </PictureNoGalleryContainer>
+      </PictureContainer>
       )
     } else {
       return (
-        <PictureAndGridContainer>
-        <PictureMainViewer>
-          <MainPic photo={this.state.mainPhoto}/>
-        </PictureMainViewer>
-        <PictureMiniGrid>
-          <GridPics picsArray={this.state.miniGrid}/>
-        </PictureMiniGrid>
+      <PictureContainer>
+        <div>
+          <PictureMainViewer>
+            <MainPic photo={this.state.mainPhoto} />
+          </PictureMainViewer>
+          <PictureMiniGrid>
+            {
+              this.state.miniGrid.map((photoObj, index) => {
+                const ThumbWrapper = styled.div`
+                  grid-area: ${'grid' + index};
+                  `;
+                return (
+                <ThumbWrapper key={photoObj.imgThumbUrl}>
+                      <Thumbnail photo={photoObj.imgThumbUrl} id={index} changePic={this.changeMainPic.bind(this)}/>
+                  </ThumbWrapper>
+                )
+              })
+            }
+          </PictureMiniGrid>
+
+        </div>
         <PictureSideGrid>
           <SidebarPics catagories={this.state.sideBarGrid}/>
         </PictureSideGrid>
-      </PictureAndGridContainer>
+      </PictureContainer>
       )
     }
   }

@@ -24,7 +24,7 @@ const seed = () => {
     let randNum = Math.floor(Math.random() * 58);
     let bool = (Math.random() > 0.5) ? true : false;
 
-    for (let x = 1; x <= randNum; x++) {
+    for (let x = 1; x <= 58; x++) {
       let tags = ['dogs', 'beach', 'sunshine', 'wonderful', 'goodFood', 'happy'];
       let tagsNum = Math.floor(Math.random() * 6);
       let image = {};
