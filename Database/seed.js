@@ -23,6 +23,8 @@ const seed = () => {
     let hotelName = 'hotel' + i;
     let randNum = Math.floor(Math.random() * 58);
     let bool = (Math.random() > 0.5) ? true : false;
+    let specialObj = {};
+    let gamble = Math.random();
 
     for (let x = 1; x <= 58; x++) {
       let tags = ['dogs', 'beach', 'sunshine', 'wonderful', 'goodFood', 'happy'];
@@ -35,7 +37,14 @@ const seed = () => {
       image.user = faker.name.firstName() + faker.name.lastName();
       image.hotel = hotelName;
       image.tag = tags[tagsNum];
-      image.special = bool;
+      specialObj.is = bool;
+
+      if (bool) {
+        specialObj.specialItem = gamble > .5 ? `https://cdn.wallpapersafari.com/99/98/2IjALn.jpg` : `https://www.tripadvisor.com/Hotel_Review-g150807-d152680-Reviews-Fiesta_Americana_Condesa_Cancun_All_Inclusive-Cancun_Yucatan_Peninsula.html#/media/152680/316101332:v/?albumid=14&type=0&category=14`;
+        specialObj.specialItemType = gamble > .5 ? 'panorama' : 'video';
+      }
+      image.special = specialObj
+
 
       pictures.push(saveOnePhoto(image));
     }

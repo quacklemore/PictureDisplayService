@@ -9,7 +9,11 @@ const pictureSchema = new mongoose.Schema({
   user: String,
   hotel: String,
   tag: String,
-  special: Boolean
+  special: {
+    is: Boolean,
+    specialItem: String,
+    specialItemType: String
+  }
 },
 {
   timeStamp: true
