@@ -12,11 +12,9 @@ const pictureSchema = new mongoose.Schema({
   special: {
     is: Boolean,
     specialItem: String,
-    specialItemType: String
+    specialItemType: String,
+    thumbnail: String
   }
-},
-{
-  timeStamp: true
 });
 
 const Photo = mongoose.model('Photo', pictureSchema);

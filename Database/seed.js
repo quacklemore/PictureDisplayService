@@ -40,8 +40,9 @@ const seed = () => {
       specialObj.is = bool;
 
       if (bool) {
-        specialObj.specialItem = gamble > .5 ? `https://cdn.wallpapersafari.com/99/98/2IjALn.jpg` : `https://www.tripadvisor.com/Hotel_Review-g150807-d152680-Reviews-Fiesta_Americana_Condesa_Cancun_All_Inclusive-Cancun_Yucatan_Peninsula.html#/media/152680/316101332:v/?albumid=14&type=0&category=14`;
+        specialObj.specialItem = gamble > .5 ? `https://cdn.wallpapersafari.com/99/98/2IjALn.jpg` : `https://video-direct-tacdn-com.global.ssl.fastly.net/media/video-v/12/d7/52/d4/fiesta-americana-condesa_720.mp4`;
         specialObj.specialItemType = gamble > .5 ? 'panorama' : 'video';
+        specialObj.thumbnail = gamble > .5 ? 'https://tripadcoba.s3-us-west-1.amazonaws.com/pano1.jpg' : 'https://tripadcoba.s3-us-west-1.amazonaws.com/video1.jpg';
       }
       image.special = specialObj
 
