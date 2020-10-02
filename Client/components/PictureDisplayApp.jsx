@@ -169,6 +169,12 @@ class PictureDisplayApp extends React.Component {
       tags: {},
       special: {}
     }
+
+    this.toggleWindowMain = this.toggleWindowMain.bind(this);
+    this.toggleWindowMost = this.toggleWindowMost.bind(this);
+    this.toggleWindowSecMost = this.toggleWindowSecMost.bind(this);
+    this.toggleWindowUser = this.toggleWindowUser.bind(this);
+    this.toggleWindowSpecial = this.toggleWindowSpecial.bind(this);
   }
 
   changeMainPic (event) {
@@ -179,8 +185,30 @@ class PictureDisplayApp extends React.Component {
     });
   }
 
-  toggleWindow (event) {
-    console.log('clicked!');
+  //expand the pop up window
+  toggleWindow (comp) {
+    console.log('clicked!', comp);
+  }
+
+  //Click router
+  toggleWindowMain () {
+    this.toggleWindow('main');
+  }
+
+  toggleWindowMost () {
+    this.toggleWindow('most');
+  }
+
+  toggleWindowSecMost () {
+    this.toggleWindow('secMost');
+  }
+
+  toggleWindowUser () {
+    this.toggleWindow('user');
+  }
+
+  toggleWindowSpecial () {
+    this.toggleWindow('special');
   }
 
   componentDidMount () {
@@ -255,7 +283,7 @@ class PictureDisplayApp extends React.Component {
       return (
       <PictureContainer>
         <div>
-          <PictureMainViewer>
+          <PictureMainViewer onClick={this.toggleWindowMain} name='viewAllPics'>
             <MainPicArrowLeftBox>
               <MainPicArrowLeft />
             </MainPicArrowLeftBox>
@@ -274,7 +302,7 @@ class PictureDisplayApp extends React.Component {
             <ViewAllWithNumber>
               View all {this.state.photos !== undefined ? this.state.photos.length : 0} Photos
             </ViewAllWithNumber>
-            <MainPic photo={this.state.mainPhoto} toggleWindow={this.toggleWindow.bind(this)}/>
+            <MainPic photo={this.state.mainPhoto}/>
           </PictureMainViewer>
           <PictureMiniGrid>
             {
@@ -294,7 +322,7 @@ class PictureDisplayApp extends React.Component {
           </PictureMiniGrid>
         </div>
         <PictureSideGrid>
-          <SidebarPics toggleWindow={this.toggleWindow.bind(this)} users={this.state.users} tags={this.state.tags} special={this.state.special} photos={this.state.photos}/>
+          <SidebarPics winMost={this.toggleWindowMost} winSecMost={this.toggleWindowSecMost} winUser={this.toggleWindowUser} winSpec={this.toggleWindowSpecial} users={this.state.users} tags={this.state.tags} special={this.state.special} photos={this.state.photos}/>
         </PictureSideGrid>
       </PictureContainer>
       )

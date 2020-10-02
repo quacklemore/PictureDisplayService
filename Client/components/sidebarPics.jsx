@@ -11,32 +11,32 @@ const SidebarPics = (props) => {
     if (props.special.is) {
       return (
         <div>
-          <div style={{ height: '33.4%', width: '100%'}}>
+          <div style={{ height: '33.4%', width: '100%'}}  onClick={props.winUser}>
             {/* Travelor section */}
-            <SidebarSections sectionInfo={props.users.length} photos={props.photos[21].imgMainUrl} />
+            <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl}/>
           </div>
-          <div style={{ height: '33.4%', width: '100%'}}>
+          <div style={{ height: '33.4%', width: '100%'}} onClick={props.winMost}>
             {/* most popular tag section */}
             <SidebarSections sectionInfo={props.tags.most} photos={props.tags[props.tags.most]} />
           </div>
-          <div style={{ height: '33.4%', width: '100%'}}>
+          <div style={{ height: '33.4%', width: '100%'}} onClick={props.winSpec}>
             {/* special media section */}
-            <SidebarSections sectionInfo={props.special.specialItemType} photos={props.special.thumbnail} />
+            <SidebarSections sectionInfo={props.special.specialItemType} photos={props.special.thumbnail}/>
           </div>
         </div>
     )
     } else {
       return (
         <div>
-          <div style={{ height: '33.5%', width: '100%'}} onClick={props.toggleWindow}>
+          <div style={{ height: '33.5%', width: '100%'}} onClick={props.toggleWindow} onClick={props.winUser}>
             {/* Travelor section */}
-            <SidebarSections sectionInfo={`Travelers ${props.users.length}`} photos={props.photos[21].imgMainUrl} />
+            <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl} />
           </div>
-          <div style={{ height: '33.5%', width: '100%'}} onClick={props.toggleWindow}>
+          <div style={{ height: '33.5%', width: '100%'}} onClick={props.toggleWindow}  onClick={props.winMost}>
             {/* most popular tag section */}
             <SidebarSections sectionInfo={props.tags.most} photos={props.tags[props.tags.most]} />
           </div>
-          <div style={{ height: '33%', width: '100%'}} onClick={props.toggleWindow}>
+          <div style={{ height: '33%', width: '100%'}} onClick={props.toggleWindow}  onClick={props.winSecMost}>
             {/* second most popular tag section */}
             <SidebarSections sectionInfo={props.tags.secondMost} photos={props.tags[props.tags.secondMost]} />
           </div>
