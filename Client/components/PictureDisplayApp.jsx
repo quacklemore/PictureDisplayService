@@ -90,7 +90,7 @@ const MainPicArrowRight = styled.div`
   content: "";
   border-radius: 3px;
   right: 50%;
-  transform: rotate(45deg);
+  transform: rotate(225deg);
   overflow: hidden;
 `;
 
@@ -141,6 +141,19 @@ const MainPicFullView = styled.div`
   position: relative;
   display: inline-block;
   top: 10%;
+`;
+
+const ViewAllWithNumber = styled.div`
+  position: absolute;
+  bottom: 5%;
+  left: 12%;
+  text-decoration: underline;
+`;
+
+const ViewAllCamera = styled.img`
+  position: absolute;
+  bottom: 4%;
+  left: 5%;
 `;
 
 //App itself
@@ -257,6 +270,10 @@ class PictureDisplayApp extends React.Component {
                   <span>Full View</span>
               </MainPicFullView>
             </MainPicFullViewBox>
+            <ViewAllCamera src={'https://tripadcoba.s3-us-west-1.amazonaws.com/camera-512.png'} />
+            <ViewAllWithNumber>
+              View all {this.state.photos !== undefined ? this.state.photos.length : 0} Photos
+            </ViewAllWithNumber>
             <MainPic photo={this.state.mainPhoto} toggleWindow={this.toggleWindow.bind(this)}/>
           </PictureMainViewer>
           <PictureMiniGrid>
