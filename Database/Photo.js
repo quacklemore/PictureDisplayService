@@ -9,10 +9,12 @@ const pictureSchema = new mongoose.Schema({
   user: String,
   hotel: String,
   tag: String,
-  special: Boolean
-},
-{
-  timeStamp: true
+  special: {
+    is: Boolean,
+    specialItem: String,
+    specialItemType: String,
+    thumbnail: String
+  }
 });
 
 const Photo = mongoose.model('Photo', pictureSchema);

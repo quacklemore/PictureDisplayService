@@ -23,6 +23,8 @@ const seed = () => {
     let hotelName = 'hotel' + i;
     let randNum = Math.floor(Math.random() * 58);
     let bool = (Math.random() > 0.5) ? true : false;
+    let specialObj = {};
+    let gamble = Math.random();
 
     for (let x = 1; x <= 58; x++) {
       let tags = ['dogs', 'beach', 'sunshine', 'wonderful', 'goodFood', 'happy'];
@@ -35,7 +37,15 @@ const seed = () => {
       image.user = faker.name.firstName() + faker.name.lastName();
       image.hotel = hotelName;
       image.tag = tags[tagsNum];
-      image.special = bool;
+      specialObj.is = bool;
+
+      if (bool) {
+        specialObj.specialItem = gamble > .5 ? `https://cdn.wallpapersafari.com/99/98/2IjALn.jpg` : `https://video-direct-tacdn-com.global.ssl.fastly.net/media/video-v/12/d7/52/d4/fiesta-americana-condesa_720.mp4`;
+        specialObj.specialItemType = gamble > .5 ? 'panorama' : 'video';
+        specialObj.thumbnail = gamble > .5 ? 'https://tripadcoba.s3-us-west-1.amazonaws.com/pano1.jpg' : 'https://tripadcoba.s3-us-west-1.amazonaws.com/video1.jpg';
+      }
+      image.special = specialObj
+
 
       pictures.push(saveOnePhoto(image));
     }
