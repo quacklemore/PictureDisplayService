@@ -19,20 +19,22 @@ font-family: 'Quicksand';
 `;
 
 const PictureMainViewer = styled.div`
+  position: relative;
   background-color: white;
   max-width: 600px;
-  min-width: 400px;
-  max-height: 400px;
-  margin-right: 3px;
-  margin-bottom: 3px;
+  height: 400px;
+  border: 3px solid white;
+  background-color: rgba(74,74,74,.6);
+  color: #fff;
+  cursor: pointer;
 `;
 
 const PictureMiniGrid = styled.div`
   display: flex;
   flex-flow: row wrap;
   max-width: 605px;
+  background-color: rgba(74,74,74,.6);
 `;
-
 
 const PictureSideGrid = styled.div`
   display: flex;
@@ -43,6 +45,102 @@ const PictureSideGrid = styled.div`
   flex-basis: 25%;
   max-width: 200px;
   min-width: 170px;
+`;
+
+const MainPicArrowLeft = styled.div`
+  position: absolute;
+  top: 50%;
+  margin: -6px;
+  width: 10px;
+  height: 10px;
+  border-left: 4px solid #fff;
+  border-bottom: 4px solid #fff;
+  content: "";
+  border-radius: 3px;
+  left: 50%;
+  transform: rotate(45deg);
+  overflow: hidden;
+`;
+
+const MainPicArrowLeftBox = styled.div`
+  opacity: 20%;
+  &:hover {
+    opacity: 100%;
+  }
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  top: 50%;
+  left: 0%;
+  margin-top: -30px;
+  background-color: rgba(0,0,0,.32);
+  border-radius: 0em .5em .5em 0em;
+`;
+
+const MainPicArrowRight = styled.div`
+  position: absolute;
+  top: 50%;
+  margin: -6px;
+  width: 10px;
+  height: 10px;
+  border-left: 4px solid #fff;
+  border-bottom: 4px solid #fff;
+  content: "";
+  border-radius: 3px;
+  right: 50%;
+  transform: rotate(45deg);
+  overflow: hidden;
+`;
+
+const MainPicArrowRightBox = styled.div`
+  opacity: 20%;
+  &:hover {
+    opacity: 100%;
+  }
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  top: 50%;
+  right: 0%;
+  margin-top: -30px;
+  background-color: rgba(0,0,0,.32);
+  border-radius: .5em 0em 0em .5em;
+`;
+
+const MainPicFullViewBox = styled.div`
+  opacity: 0%;
+  &:hover {
+    opacity: 100%;
+  }
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  width: 120px;
+  height: 60px;
+  top: 50%;
+  left: 50%;
+  margin-left: -60px;
+  margin-top: -30px;
+  background: rgba(0,0,0,.32);
+  border-radius: .5em;
+  color: white;
+`;
+
+const MainPicFullViewIcon = styled.span`
+  transform: rotate(-45deg);
+  width: 1px;
+  display: inline-block;
+  margin: 15px 15px;
+`;
+
+const MainPicFullView = styled.div`
+  position: relative;
+  display: inline-block;
+  top: 10%;
 `;
 
 //App itself
@@ -61,8 +159,8 @@ class PictureDisplayApp extends React.Component {
   }
 
   changeMainPic (event) {
+    event.preventDefault();
     let newMain = this.state.photos[event.target.id].imgMainUrl;
-    // console.log(newMain);
     this.setState({
       mainPhoto: newMain
     });
@@ -80,7 +178,6 @@ class PictureDisplayApp extends React.Component {
       }
     })
     .then((res) => {
-      // console.log("Got the response:", res.data[0]);
 
       //finding the most common tag and storing those pictures
       let tagObj = {};
@@ -130,8 +227,6 @@ class PictureDisplayApp extends React.Component {
   }
 
   renderingChoices () {
-    // console.log(this.state.photos);
-
     if (this.state.photos.length < 20) {
       return (
       <PictureContainer>
@@ -148,6 +243,20 @@ class PictureDisplayApp extends React.Component {
       <PictureContainer>
         <div>
           <PictureMainViewer>
+            <MainPicArrowLeftBox>
+              <MainPicArrowLeft />
+            </MainPicArrowLeftBox>
+            <MainPicArrowRightBox>
+              <MainPicArrowRight />
+            </MainPicArrowRightBox>
+            <MainPicFullViewBox>
+              <MainPicFullView>
+                <MainPicFullViewIcon>
+                  &#8596;
+                </MainPicFullViewIcon>
+                  <span>Full View</span>
+              </MainPicFullView>
+            </MainPicFullViewBox>
             <MainPic photo={this.state.mainPhoto} toggleWindow={this.toggleWindow.bind(this)}/>
           </PictureMainViewer>
           <PictureMiniGrid>
@@ -155,6 +264,8 @@ class PictureDisplayApp extends React.Component {
               this.state.miniGrid.map((photoObj, index) => {
                 const ThumbWrapper = styled.div`
                   flex: 1;
+                  background-color: white;
+                  border-top: 2px solid white;
                   `;
                 return (
                 <ThumbWrapper key={photoObj.imgThumbUrl}>
@@ -176,7 +287,7 @@ class PictureDisplayApp extends React.Component {
   render () {
 
     return (
-      <div className="pictureModule" style={{ maxWidth: '813px'}}>
+      <div className="pictureModule" style={{ maxWidth: '813px', boxSizing: 'border-box'}}>
         {this.renderingChoices()}
       </div>
     );
