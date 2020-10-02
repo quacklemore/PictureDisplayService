@@ -4,7 +4,6 @@ import axios from 'axios';
 import _ from 'underscore';
 
 import MainPic from './mainPic.jsx';
-import GridPics from './gridPics.jsx';
 import SidebarPics from './sidebarPics.jsx';
 import Thumbnail from './thumbnail.jsx';
 
@@ -16,67 +15,34 @@ flex-direction: row;
 flex-wrap: nowrap;
 justify-content: flex-start;
 align-items: stretch;
+font-family: 'Quicksand';
 `;
-
-/* // const PictureAndGridContainer = styled.div`
-// display: grid;
-// grid-template-columns: repeat(13, 60px, [col-start]);
-// grid-template-rows: repeat(10, 50px, [row-start]);
-// background-color: green;
-// width: 818px;
-// height: 481px;
-// grid-template-areas:
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "gallery gallery gallery gallery gallery gallery gallery gallery gallery gallery viewOptions viewOptions viewOptions"
-// "gallery gallery gallery gallery gallery gallery gallery gallery gallery gallery viewOptions viewOptions viewOptions";
-// `
-
-// const PictureNoGalleryContainer = styled.div`
-// display: grid;
-// grid-template-columns: repeat(13, 60px, [col-start]);
-// grid-template-rows: repeat(10, 50px, [row-start]);
-// background-color: green;
-// width: 818px;
-// height: 481px;
-// grid-template-areas:
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions"
-// "main main main main main main main main main main viewOptions viewOptions viewOptions";
-// ` */
 
 const PictureMainViewer = styled.div`
   background-color: white;
-  width: 600px;
-  border: 2px solid white;
+  max-width: 600px;
+  min-width: 400px;
+  max-height: 400px;
+  margin-right: 3px;
+  margin-bottom: 3px;
 `;
 
 const PictureMiniGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(10, 58px, [col-start]);
-  grid-template-rows: repeat(2, 50px, [row-start]);
-  margin-top: 2px;
-  background-color: white;
-  grid-template-areas:
-  "grid0 grid1 grid2 grid3 grid4 grid5 grid6 grid7 grid8 grid9 "
-  "grid10 grid11 grid12 grid13 grid14 grid15 grid16 grid17 grid18 grid19";
+  display: flex;
+  flex-flow: row wrap;
+  max-width: 605px;
 `;
 
+
 const PictureSideGrid = styled.div`
-  background-color: blueviolet;
+  display: flex;
+  overflow: hidden;
+  flex-flow: column wrap;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: 25%;
+  max-width: 200px;
+  min-width: 170px;
 `;
 
 //App itself
@@ -89,7 +55,8 @@ class PictureDisplayApp extends React.Component {
       users: [],
       mainPhoto: '',
       miniGrid: [],
-      sideBarGrid: []
+      tags: {},
+      special: {}
     }
   }
 
@@ -101,6 +68,10 @@ class PictureDisplayApp extends React.Component {
     });
   }
 
+  toggleWindow (event) {
+    console.log('clicked!');
+  }
+
   componentDidMount () {
     axios('/api/pictures/', {
       method: 'POST',
@@ -110,18 +81,47 @@ class PictureDisplayApp extends React.Component {
     })
     .then((res) => {
       // console.log("Got the response:", res.data[0]);
+
+      //finding the most common tag and storing those pictures
+      let tagObj = {};
+      let most = 0;
+      let secondMost = 0;
       let tagArr = [];
+
       let userArr = [];
       this.setState({ photos: res.data });
       this.setState({ mainPhoto: res.data[0].imgMainUrl })
       this.setState({ miniGrid: res.data.slice(0, 20) })
-      res.data.map((photoObj) => {
+      // debugger;
+      res.data.map((photoObj, i) => {
         userArr.push(photoObj.user);
-        tagArr.push(photoObj.tag);
-        userArr = _.uniq(userArr).sort();
-        tagArr = _.uniq(tagArr).sort();
+        if (tagObj[photoObj.tag] === undefined) {
+          tagObj[photoObj.tag] = [];
+          tagObj[photoObj.tag].push(photoObj);
+        } else {
+          tagObj[photoObj.tag].push(photoObj);
+        }
       })
-      this.setState({ sideBarGrid: [userArr, tagArr, res.data[0].special] })
+      for (let key in tagObj) {
+        tagArr.push(key);
+        if (tagObj[key].length > most) {
+          if (most !== 0) {
+            secondMost = most;
+            tagObj.secondMost = tagObj.most;
+          }
+          most = tagObj[key].length;
+          tagObj.most = key;
+        } else if (tagObj[key].length <= most && tagObj.most !== key && tagObj[key].length > secondMost) {
+          secondMost = tagObj[key].length;
+          tagObj.secondMost = key;
+        }
+      }
+      userArr = _.uniq(userArr);
+      userArr.sort();
+      this.setState({ users: userArr });
+      tagObj.tags = tagArr;
+      this.setState({ tags: tagObj })
+      this.setState({ special: res.data[0].special })
 
     })
     .catch((err) => {
@@ -148,13 +148,13 @@ class PictureDisplayApp extends React.Component {
       <PictureContainer>
         <div>
           <PictureMainViewer>
-            <MainPic photo={this.state.mainPhoto} />
+            <MainPic photo={this.state.mainPhoto} toggleWindow={this.toggleWindow.bind(this)}/>
           </PictureMainViewer>
           <PictureMiniGrid>
             {
               this.state.miniGrid.map((photoObj, index) => {
                 const ThumbWrapper = styled.div`
-                  grid-area: ${'grid' + index};
+                  flex: 1;
                   `;
                 return (
                 <ThumbWrapper key={photoObj.imgThumbUrl}>
@@ -164,10 +164,9 @@ class PictureDisplayApp extends React.Component {
               })
             }
           </PictureMiniGrid>
-
         </div>
         <PictureSideGrid>
-          <SidebarPics catagories={this.state.sideBarGrid}/>
+          <SidebarPics toggleWindow={this.toggleWindow.bind(this)} users={this.state.users} tags={this.state.tags} special={this.state.special} photos={this.state.photos}/>
         </PictureSideGrid>
       </PictureContainer>
       )
@@ -177,7 +176,7 @@ class PictureDisplayApp extends React.Component {
   render () {
 
     return (
-      <div className="pictureModule">
+      <div className="pictureModule" style={{ maxWidth: '813px'}}>
         {this.renderingChoices()}
       </div>
     );

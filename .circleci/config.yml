@@ -1,11 +1,16 @@
 version: 2.1
-  jobs:
-    build:
-      steps:
-        -checkout
-        -run:
-            name: start-server
-            command: 'npm run server'
-        -run:
-            name: test
-            command: 'npm run test'
+jobs:
+  build:
+    macos:
+      xcode: 11.6.0
+    steps:
+      - checkout
+      - run:
+          name: Build Application
+          command: npm run build
+      - run:
+          name: Start server
+          command: npm run server
+      - run:
+          name: Run Unit Tests
+          command: npm run test
