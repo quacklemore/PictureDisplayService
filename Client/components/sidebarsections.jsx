@@ -10,10 +10,9 @@ const SidebarSections = (props) => {
     }
 
     return (
-    <div>
-      <span style={{position: 'absolute', fontSize: 20, color: 'white'}}>{props.sectionInfo}</span>
-      <span style={{position: 'absolute', opacity: '35%', width: '200px', height: '167px', backgroundColor: 'white'}}></span>
-      <img src={photo} style={{ height: '167px' }}/>
+    <div style={{ position: 'relative', width: '200px', height: '167px', border: '1px solid white', marginTop: '0px', backgroundColor: 'rgba(74,74,74,.6)'}}>
+      <span style={{position: 'absolute', fontSize: 20, color: 'white', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '50%', zIndex: 1, textAlign: 'center'}}>{props.sectionInfo}</span>
+      <img src={photo} style={{ width: '100%', height: '100%', opacity: '35%' }}/>
     </div>
     );
   } else {
