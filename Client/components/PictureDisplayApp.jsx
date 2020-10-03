@@ -207,15 +207,10 @@ class PictureDisplayApp extends React.Component {
     event.preventDefault();
     let change;
     let id = Number.parseInt(event.target.id);
-    if (id > this.state.mainPhotoId) {
-      change = 1;
-    } else {
-      change = -1;
-    }
     let newMain = this.state.photos[event.target.id].imgMainUrl;
     this.setState({
       mainPhoto: newMain,
-      mainPhotoId: this.state.mainPhotoId + change
+      mainPhotoId: id
     });
   }
 
