@@ -27,6 +27,7 @@ const PictureMainViewer = styled.div`
   background-color: rgba(74,74,74,.6);
   color: #fff;
   cursor: pointer;
+  z-index: 1;
 `;
 
 const PictureMiniGrid = styled.div`
@@ -68,7 +69,7 @@ const MainPicArrowLeftBox = styled.div`
     opacity: 100%;
   }
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   cursor: pointer;
   width: 60px;
   height: 60px;
@@ -100,7 +101,7 @@ const MainPicArrowRightBox = styled.div`
     opacity: 100%;
   }
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   cursor: pointer;
   width: 60px;
   height: 60px;
@@ -195,32 +196,35 @@ class PictureDisplayApp extends React.Component {
       photos: [],
       users: [],
       mainPhoto: '',
+      mainPhotoId: 0,
       miniGrid: [],
       tags: {},
       special: {}
     }
-
-    this.toggleWindowMain = this.toggleWindowMain.bind(this);
-    this.toggleWindowMost = this.toggleWindowMost.bind(this);
-    this.toggleWindowSecMost = this.toggleWindowSecMost.bind(this);
-    this.toggleWindowUser = this.toggleWindowUser.bind(this);
-    this.toggleWindowSpecial = this.toggleWindowSpecial.bind(this);
   }
 
   changeMainPic (event) {
     event.preventDefault();
+    let change;
+    let id = Number.parseInt(event.target.id);
+    if (id > this.state.mainPhotoId) {
+      change = 1;
+    } else {
+      change = -1;
+    }
     let newMain = this.state.photos[event.target.id].imgMainUrl;
     this.setState({
-      mainPhoto: newMain
+      mainPhoto: newMain,
+      mainPhotoId: this.state.mainPhotoId + change
     });
   }
 
   //pop up window
   toggleWindowOpen (comp) {
     document.getElementById('picturePopOutWindowOfPics').style.opacity = '100%';
-    document.getElementById('picturePopOutWindowOfPics').style.zIndex = 3;
+    document.getElementById('picturePopOutWindowOfPics').style.zIndex = 4;
     document.getElementById('pictureGreyOutBackground').style.opacity = '60%';
-    document.getElementById('pictureGreyOutBackground').style.zIndex = 2;
+    document.getElementById('pictureGreyOutBackground').style.zIndex = 3;
   }
 
   toggleWindowClosed() {
@@ -328,23 +332,25 @@ class PictureDisplayApp extends React.Component {
         <GreyOutBackground id='pictureGreyOutBackground' onClick={this.toggleWindowClosed}/>
         <PictureContainer>
           <div>
-            <PictureMainViewer onClick={this.toggleWindowMain} name='viewAllPics'>
-              <MainPicArrowLeftBox>
+            <PictureMainViewer>
+              <MainPicArrowLeftBox onClick={this.changeMainPic.bind(this)} id={this.state.mainPhotoId > 0 ? this.state.mainPhotoId - 1 : this.state.photos.length - 1}>
                 <MainPicArrowLeft />
               </MainPicArrowLeftBox>
-              <MainPicArrowRightBox>
+              <MainPicArrowRightBox onClick={this.changeMainPic.bind(this)} id={this.state.mainPhotoId < this.state.photos.length - 1 ? this.state.mainPhotoId + 1 : 0}>
                 <MainPicArrowRight />
               </MainPicArrowRightBox>
-              <MainPicFullViewBox>
-                <MainPicFullView>
-                    &#x2922;  Full View
-                </MainPicFullView>
-              </MainPicFullViewBox>
-              <ViewAllCamera src={'https://tripadcoba.s3-us-west-1.amazonaws.com/camera-512.png'} />
-              <ViewAllWithNumber>
-                View all {this.state.photos !== undefined ? this.state.photos.length : 0} Photos
-              </ViewAllWithNumber>
-              <MainPic photo={this.state.mainPhoto}/>
+              <div onClick={this.toggleWindowMain.bind(this)} name='viewAllPics'>
+                <MainPicFullViewBox>
+                  <MainPicFullView>
+                      &#x2922;  Full View
+                  </MainPicFullView>
+                </MainPicFullViewBox>
+                <ViewAllCamera src={'https://tripadcoba.s3-us-west-1.amazonaws.com/camera-512.png'} />
+                <ViewAllWithNumber>
+                  View all {this.state.photos !== undefined ? this.state.photos.length : 0} Photos
+                </ViewAllWithNumber>
+                <MainPic photo={this.state.mainPhoto}/>
+              </div>
             </PictureMainViewer>
             <PictureMiniGrid>
               {
@@ -364,7 +370,7 @@ class PictureDisplayApp extends React.Component {
             </PictureMiniGrid>
           </div>
           <PictureSideGrid>
-            <SidebarPics winMost={this.toggleWindowMost} winSecMost={this.toggleWindowSecMost} winUser={this.toggleWindowUser} winSpec={this.toggleWindowSpecial} users={this.state.users} tags={this.state.tags} special={this.state.special} photos={this.state.photos}/>
+            <SidebarPics winMost={this.toggleWindowMost.bind(this)} winSecMost={this.toggleWindowSecMost.bind(this)} winUser={this.toggleWindowUser.bind(this)} winSpec={this.toggleWindowSpecial.bind(this)} users={this.state.users} tags={this.state.tags} special={this.state.special} photos={this.state.photos}/>
           </PictureSideGrid>
         </PictureContainer>
       </div>
