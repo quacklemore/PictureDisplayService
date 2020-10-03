@@ -130,17 +130,11 @@ const MainPicFullViewBox = styled.div`
   color: white;
 `;
 
-const MainPicFullViewIcon = styled.span`
-  transform: rotate(-45deg);
-  width: 1px;
-  display: inline-block;
-  margin: 15px 15px;
-`;
-
 const MainPicFullView = styled.div`
   position: relative;
   display: inline-block;
-  top: 10%;
+  top: 30%;
+  left: 15%;
 `;
 
 const ViewAllWithNumber = styled.div`
@@ -154,6 +148,42 @@ const ViewAllCamera = styled.img`
   position: absolute;
   bottom: 4%;
   left: 5%;
+`;
+
+const PopOutWindowOfPics = styled.div`
+  position: absolute;
+  top: 2.5%;
+  left: 2.5%;
+  width: 95%;
+  height: 95%;
+  background-color: white;
+  opacity: 0%;
+  z-index: -2;
+  box-shadow: 10px 10px 15px grey;
+`;
+
+const ClosePopUpButton = styled.button`
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 0%;
+  right: 0%;
+  border: .5px dotted grey;
+  text-align: center;
+  background-color: white;
+  font-size: 1.5em;
+  font-weight: bold;
+`;
+
+const GreyOutBackground = styled.div`
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0%;
+  background-color: grey;
+  z-index: -2;
 `;
 
 //App itself
@@ -185,30 +215,40 @@ class PictureDisplayApp extends React.Component {
     });
   }
 
-  //expand the pop up window
-  toggleWindow (comp) {
-    console.log('clicked!', comp);
+  //pop up window
+  toggleWindowOpen (comp) {
+    document.getElementById('picturePopOutWindowOfPics').style.opacity = '100%';
+    document.getElementById('picturePopOutWindowOfPics').style.zIndex = 3;
+    document.getElementById('pictureGreyOutBackground').style.opacity = '60%';
+    document.getElementById('pictureGreyOutBackground').style.zIndex = 2;
+  }
+
+  toggleWindowClosed() {
+    document.getElementById('picturePopOutWindowOfPics').style.opacity = '0%';
+    document.getElementById('picturePopOutWindowOfPics').style.zIndex = -3;
+    document.getElementById('pictureGreyOutBackground').style.opacity = '0%';
+    document.getElementById('pictureGreyOutBackground').style.zIndex = -2;
   }
 
   //Click router
   toggleWindowMain () {
-    this.toggleWindow('main');
+    this.toggleWindowOpen('main');
   }
 
   toggleWindowMost () {
-    this.toggleWindow('most');
+    this.toggleWindowOpen('most');
   }
 
   toggleWindowSecMost () {
-    this.toggleWindow('secMost');
+    this.toggleWindowOpen('secMost');
   }
 
   toggleWindowUser () {
-    this.toggleWindow('user');
+    this.toggleWindowOpen('user');
   }
 
   toggleWindowSpecial () {
-    this.toggleWindow('special');
+    this.toggleWindowOpen('special');
   }
 
   componentDidMount () {
@@ -281,50 +321,53 @@ class PictureDisplayApp extends React.Component {
       )
     } else {
       return (
-      <PictureContainer>
-        <div>
-          <PictureMainViewer onClick={this.toggleWindowMain} name='viewAllPics'>
-            <MainPicArrowLeftBox>
-              <MainPicArrowLeft />
-            </MainPicArrowLeftBox>
-            <MainPicArrowRightBox>
-              <MainPicArrowRight />
-            </MainPicArrowRightBox>
-            <MainPicFullViewBox>
-              <MainPicFullView>
-                <MainPicFullViewIcon>
-                  &#8596;
-                </MainPicFullViewIcon>
-                  <span>Full View</span>
-              </MainPicFullView>
-            </MainPicFullViewBox>
-            <ViewAllCamera src={'https://tripadcoba.s3-us-west-1.amazonaws.com/camera-512.png'} />
-            <ViewAllWithNumber>
-              View all {this.state.photos !== undefined ? this.state.photos.length : 0} Photos
-            </ViewAllWithNumber>
-            <MainPic photo={this.state.mainPhoto}/>
-          </PictureMainViewer>
-          <PictureMiniGrid>
-            {
-              this.state.miniGrid.map((photoObj, index) => {
-                const ThumbWrapper = styled.div`
-                  flex: 1;
-                  background-color: white;
-                  border-top: 2px solid white;
-                  `;
-                return (
-                <ThumbWrapper key={photoObj.imgThumbUrl}>
-                      <Thumbnail photo={photoObj.imgThumbUrl} id={index} changePic={this.changeMainPic.bind(this)}/>
-                  </ThumbWrapper>
-                )
-              })
-            }
-          </PictureMiniGrid>
-        </div>
-        <PictureSideGrid>
-          <SidebarPics winMost={this.toggleWindowMost} winSecMost={this.toggleWindowSecMost} winUser={this.toggleWindowUser} winSpec={this.toggleWindowSpecial} users={this.state.users} tags={this.state.tags} special={this.state.special} photos={this.state.photos}/>
-        </PictureSideGrid>
-      </PictureContainer>
+      <div>
+        <PopOutWindowOfPics id='picturePopOutWindowOfPics'>
+          <ClosePopUpButton onClick={this.toggleWindowClosed}>&#x2573;</ClosePopUpButton>
+        </PopOutWindowOfPics>
+        <GreyOutBackground id='pictureGreyOutBackground' onClick={this.toggleWindowClosed}/>
+        <PictureContainer>
+          <div>
+            <PictureMainViewer onClick={this.toggleWindowMain} name='viewAllPics'>
+              <MainPicArrowLeftBox>
+                <MainPicArrowLeft />
+              </MainPicArrowLeftBox>
+              <MainPicArrowRightBox>
+                <MainPicArrowRight />
+              </MainPicArrowRightBox>
+              <MainPicFullViewBox>
+                <MainPicFullView>
+                    &#x2922;  Full View
+                </MainPicFullView>
+              </MainPicFullViewBox>
+              <ViewAllCamera src={'https://tripadcoba.s3-us-west-1.amazonaws.com/camera-512.png'} />
+              <ViewAllWithNumber>
+                View all {this.state.photos !== undefined ? this.state.photos.length : 0} Photos
+              </ViewAllWithNumber>
+              <MainPic photo={this.state.mainPhoto}/>
+            </PictureMainViewer>
+            <PictureMiniGrid>
+              {
+                this.state.miniGrid.map((photoObj, index) => {
+                  const ThumbWrapper = styled.div`
+                    flex: 1;
+                    background-color: white;
+                    border-top: 2px solid white;
+                    `;
+                  return (
+                  <ThumbWrapper key={photoObj.imgThumbUrl}>
+                        <Thumbnail photo={photoObj.imgThumbUrl} id={index} changePic={this.changeMainPic.bind(this)}/>
+                    </ThumbWrapper>
+                  )
+                })
+              }
+            </PictureMiniGrid>
+          </div>
+          <PictureSideGrid>
+            <SidebarPics winMost={this.toggleWindowMost} winSecMost={this.toggleWindowSecMost} winUser={this.toggleWindowUser} winSpec={this.toggleWindowSpecial} users={this.state.users} tags={this.state.tags} special={this.state.special} photos={this.state.photos}/>
+          </PictureSideGrid>
+        </PictureContainer>
+      </div>
       )
     }
   }
