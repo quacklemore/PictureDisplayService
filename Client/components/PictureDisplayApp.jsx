@@ -34,7 +34,6 @@ const PictureMiniGrid = styled.div`
   display: flex;
   flex-flow: row wrap;
   max-width: 605px;
-  background-color: rgba(74,74,74,.6);
 `;
 
 const PictureSideGrid = styled.div`
@@ -185,6 +184,17 @@ const GreyOutBackground = styled.div`
   opacity: 0%;
   background-color: grey;
   z-index: -2;
+`;
+
+const ThumbCover = styled.div`
+  position: absolute;
+  width: 58px;
+  height: 48px;
+  opacity: 50%;
+  background-color: black;
+  &:hover{
+    opacity: 0%;
+  }
 `;
 
 //App itself
@@ -352,12 +362,18 @@ class PictureDisplayApp extends React.Component {
                 this.state.miniGrid.map((photoObj, index) => {
                   const ThumbWrapper = styled.div`
                     flex: 1;
-                    background-color: white;
                     border-top: 2px solid white;
+                    width: 60px;
+                    height: 50px;
+                    /* opacity: 70%;
+                    &:hover{
+                      opacity: 100%;
+                    } */
                     `;
                   return (
                   <ThumbWrapper key={photoObj.imgThumbUrl}>
-                        <Thumbnail photo={photoObj.imgThumbUrl} id={index} changePic={this.changeMainPic.bind(this)}/>
+                        <ThumbCover id={index} onClick={this.changeMainPic.bind(this)}/>
+                        <Thumbnail photo={photoObj.imgThumbUrl} id={index} changePic={this.changeMainPic.bind(this)} style={{position: 'absolute'}}/>
                     </ThumbWrapper>
                   )
                 })
