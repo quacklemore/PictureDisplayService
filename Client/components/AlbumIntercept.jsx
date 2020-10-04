@@ -8,7 +8,7 @@ const AlbumProcessor = (props) => {
     return (
         props.tags.map((albumObj, index) => {
           return (
-              <PopOutAlbumPics photo={albumObj.photo} details={albumObj.tag} key={'album' + index}/>
+              <PopOutAlbumPics photo={albumObj.photo} details={albumObj.tag} key={'album' + index} changeContent={props.changeContent}/>
           )
         })
     )

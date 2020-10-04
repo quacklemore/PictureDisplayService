@@ -257,8 +257,8 @@ const PopOutWindowAlbumGrid = styled.div`
 
 
 const FlexPicWrapperSmalls = styled.div`
-  margin: 10px;
-  width: 20%;
+  margin: 5px;
+  width: 30%;
 `;
 
 const FlexPicWrapperFull = styled.div`
@@ -302,13 +302,45 @@ class PictureDisplayApp extends React.Component {
 
   //pop up window
   toggleWindowOpen (comp) {
+
+    this.setWindowContent(comp);
+
     document.getElementById('picturePopOutWindowOfPics').style.opacity = '100%';
     document.getElementById('picturePopOutWindowOfPics').style.zIndex = 4;
     document.getElementById('pictureGreyOutBackground').style.opacity = '60%';
     document.getElementById('pictureGreyOutBackground').style.zIndex = 3;
 
+  }
 
-    //filtering the pictures for the window
+  toggleWindowClosed() {
+    document.getElementById('picturePopOutWindowOfPics').style.opacity = '0%';
+    document.getElementById('picturePopOutWindowOfPics').style.zIndex = -3;
+    document.getElementById('pictureGreyOutBackground').style.opacity = '0%';
+    document.getElementById('pictureGreyOutBackground').style.zIndex = -2;
+  }
+
+  //Click router got pop-up window
+  toggleWindowMain () {
+    this.toggleWindowOpen('main');
+  }
+
+  toggleWindowMost () {
+    this.toggleWindowOpen('most');
+  }
+
+  toggleWindowSecMost () {
+    this.toggleWindowOpen('secMost');
+  }
+
+  toggleWindowUser () {
+    this.toggleWindowOpen('user');
+  }
+
+  toggleWindowSpecial () {
+    this.toggleWindowOpen('special');
+  }
+
+  setWindowContent (comp, tag) {
     if (comp === 'main') {
       let fullMain = [];
       fullMain.push(this.state.photos[this.state.mainPhotoId].imgFullUrl);
@@ -363,36 +395,16 @@ class PictureDisplayApp extends React.Component {
       } else if (this.state.photos.special.specialItemType === 'video') {
 
       }
+    } else if (comp === 'tag') {
+      let tagArray = this.state.tags[tag];
+      let tagPhotoArray = tagArray.map((photo) => {
+        return photo.imgMainUrl;
+      })
+      this.setState({
+        flexedPics: tagPhotoArray,
+        isFullSize: false
+      })
     }
-
-  }
-
-  toggleWindowClosed() {
-    document.getElementById('picturePopOutWindowOfPics').style.opacity = '0%';
-    document.getElementById('picturePopOutWindowOfPics').style.zIndex = -3;
-    document.getElementById('pictureGreyOutBackground').style.opacity = '0%';
-    document.getElementById('pictureGreyOutBackground').style.zIndex = -2;
-  }
-
-  //Click router got pop-up window
-  toggleWindowMain () {
-    this.toggleWindowOpen('main');
-  }
-
-  toggleWindowMost () {
-    this.toggleWindowOpen('most');
-  }
-
-  toggleWindowSecMost () {
-    this.toggleWindowOpen('secMost');
-  }
-
-  toggleWindowUser () {
-    this.toggleWindowOpen('user');
-  }
-
-  toggleWindowSpecial () {
-    this.toggleWindowOpen('special');
   }
 
   componentDidMount () {
@@ -483,7 +495,7 @@ class PictureDisplayApp extends React.Component {
             <AlbumWrapper>
               <PopOutWindowAlbumGrid>
                 <HeaderOfText>Albums Based On Tags: </HeaderOfText>
-                <AlbumProcessor tags={this.state.tags.albums} />
+                <AlbumProcessor tags={this.state.tags.albums} changeContent={this.setWindowContent.bind(this)}/>
               </PopOutWindowAlbumGrid>
             </AlbumWrapper>
             <PopOutWindowFlex>
