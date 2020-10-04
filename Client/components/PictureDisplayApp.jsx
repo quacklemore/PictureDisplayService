@@ -199,19 +199,41 @@ const ThumbCover = styled.div`
 `;
 
 const PopOutWindowFlex = styled.div`
+  position: absolute;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-content: stretch;
   overflow: scroll;
-  width: 100%;
+  width: 80%;
   height: 100%;
+  top: 150px;
+  right: 0%;
 `;
 
-const FlexPicWrapper = styled.div`
+const FlexPicWrapperSmalls = styled.div`
   margin: 10px;
-  max-height: 95%;
+  width: 20%;
+`;
+
+const FlexPicWrapperFull = styled.div`
+  margin: 10px;
+  width: 100%;
+`;
+
+const PopOutWindowAlbumGrid = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  overflow: scroll;
+  width: 20%;
+  height: 100%;
+  top: 10px;
+  left: 0%;
 `;
 
 //App itself
@@ -227,7 +249,8 @@ class PictureDisplayApp extends React.Component {
       miniGrid: [],
       tags: {},
       special: {},
-      flexedPics: []
+      flexedPics: [],
+      isFullSize: false
     }
   }
 
@@ -249,26 +272,30 @@ class PictureDisplayApp extends React.Component {
     document.getElementById('pictureGreyOutBackground').style.opacity = '60%';
     document.getElementById('pictureGreyOutBackground').style.zIndex = 3;
 
+
     //filtering the pictures for the window
     if (comp === 'main') {
       let fullMain = [];
       fullMain.push(this.state.photos[this.state.mainPhotoId].imgFullUrl);
       this.setState({
-        flexedPics: fullMain
+        flexedPics: fullMain,
+        isFullSize: true
       })
     } else if (comp === 'most') {
       let arrayOfMost = this.state.tags[this.state.tags.most].map((photo) => {
         return photo.imgMainUrl;
       });
       this.setState({
-        flexedPics: arrayOfMost
+        flexedPics: arrayOfMost,
+        isFullSize: false
       })
     } else if (comp === 'secMost') {
       let arrayOfSecMost = this.state.tags[this.state.tags.secondMost].map((photo) => {
         return photo.imgMainUrl;
       });
       this.setState({
-        flexedPics: arrayOfSecMost
+        flexedPics: arrayOfSecMost,
+        isFullSize: false
       })
     } else if (comp === 'user') {
       let arrayOfSorted = this.state.photos.sort((photo1, photo2) => {
@@ -284,14 +311,16 @@ class PictureDisplayApp extends React.Component {
         return photo.imgMainUrl;
       })
       this.setState({
-        flexedPics: sortedPhotos
+        flexedPics: sortedPhotos,
+        isFullSize: false
       })
     } else if (comp === 'special') {
       let specialItems = this.state.photos.map((photo) => {
         return photo.special.specialItem;
       })
       this.setState({
-        flexedPics: specialItems
+        flexedPics: specialItems,
+        isFullSize: true
       })
       //REFACTOR WHEN USING SPECIAL MEDIA TYPES
       if (this.state.photos.special.specialItemType === 'panorama') {
@@ -408,11 +437,19 @@ class PictureDisplayApp extends React.Component {
           <PopOutWindowFlex>
             {
               this.state.flexedPics.map((photo, index) => {
-                return (
-                  <FlexPicWrapper key={'popOut' + index}>
-                    <PopOutFlexPics photo={photo} />
-                  </FlexPicWrapper>
-                )
+                if (this.state.isFullSize) {
+                  return (
+                    <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
+                      <PopOutFlexPics photo={photo} />
+                    </FlexPicWrapperFull>
+                  )
+                } else {
+                  return (
+                    <FlexPicWrapperSmalls key={'popOut' + index} id={'FlexPicWrapper'}>
+                      <PopOutFlexPics photo={photo} />
+                    </FlexPicWrapperSmalls>
+                  )
+                }
               })
             }
           </PopOutWindowFlex>
