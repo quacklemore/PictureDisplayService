@@ -6,6 +6,7 @@ import _ from 'underscore';
 import MainPic from './mainPic.jsx';
 import SidebarPics from './sidebarPics.jsx';
 import Thumbnail from './thumbnail.jsx';
+import PopOutFlexPics from './popOutFlexGridPics.jsx';
 
 //Styling
 
@@ -197,6 +198,22 @@ const ThumbCover = styled.div`
   }
 `;
 
+const PopOutWindowFlex = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: stretch;
+  overflow: scroll;
+  width: 100%;
+  height: 100%;
+`;
+
+const FlexPicWrapper = styled.div`
+  margin: 10px;
+  max-height: 95%;
+`;
+
 //App itself
 class PictureDisplayApp extends React.Component {
   constructor (props) {
@@ -209,7 +226,8 @@ class PictureDisplayApp extends React.Component {
       mainPhotoId: 0,
       miniGrid: [],
       tags: {},
-      special: {}
+      special: {},
+      flexedPics: []
     }
   }
 
@@ -230,6 +248,59 @@ class PictureDisplayApp extends React.Component {
     document.getElementById('picturePopOutWindowOfPics').style.zIndex = 4;
     document.getElementById('pictureGreyOutBackground').style.opacity = '60%';
     document.getElementById('pictureGreyOutBackground').style.zIndex = 3;
+
+    //filtering the pictures for the window
+    if (comp === 'main') {
+      let fullMain = [];
+      fullMain.push(this.state.photos[this.state.mainPhotoId].imgFullUrl);
+      this.setState({
+        flexedPics: fullMain
+      })
+    } else if (comp === 'most') {
+      let arrayOfMost = this.state.tags[this.state.tags.most].map((photo) => {
+        return photo.imgMainUrl;
+      });
+      this.setState({
+        flexedPics: arrayOfMost
+      })
+    } else if (comp === 'secMost') {
+      let arrayOfSecMost = this.state.tags[this.state.tags.secondMost].map((photo) => {
+        return photo.imgMainUrl;
+      });
+      this.setState({
+        flexedPics: arrayOfSecMost
+      })
+    } else if (comp === 'user') {
+      let arrayOfSorted = this.state.photos.sort((photo1, photo2) => {
+        if (photo1.user.toLowerCase() < photo2.user.toLowerCase()) {
+          return -1;
+        } else if (photo1.user.toLowerCase() > photo2.user.toLowerCase()) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+      let sortedPhotos = arrayOfSorted.map((photo) => {
+        return photo.imgMainUrl;
+      })
+      this.setState({
+        flexedPics: sortedPhotos
+      })
+    } else if (comp === 'special') {
+      let specialItems = this.state.photos.map((photo) => {
+        return photo.special.specialItem;
+      })
+      this.setState({
+        flexedPics: specialItems
+      })
+      //REFACTOR WHEN USING SPECIAL MEDIA TYPES
+      if (this.state.photos.special.specialItemType === 'panorama') {
+
+      } else if (this.state.photos.special.specialItemType === 'video') {
+
+      }
+    }
+
   }
 
   toggleWindowClosed() {
@@ -331,10 +402,24 @@ class PictureDisplayApp extends React.Component {
     } else {
       return (
       <div>
+        {/* pop out window business */}
         <PopOutWindowOfPics id='picturePopOutWindowOfPics'>
           <ClosePopUpButton onClick={this.toggleWindowClosed}>&#x2573;</ClosePopUpButton>
+          <PopOutWindowFlex>
+            {
+              this.state.flexedPics.map((photo, index) => {
+                return (
+                  <FlexPicWrapper key={'popOut' + index}>
+                    <PopOutFlexPics photo={photo} />
+                  </FlexPicWrapper>
+                )
+              })
+            }
+          </PopOutWindowFlex>
         </PopOutWindowOfPics>
         <GreyOutBackground id='pictureGreyOutBackground' onClick={this.toggleWindowClosed}/>
+
+        {/* Main module business */}
         <PictureContainer>
           <div>
             <PictureMainViewer>
@@ -365,10 +450,6 @@ class PictureDisplayApp extends React.Component {
                     border-top: 2px solid white;
                     width: 60px;
                     height: 50px;
-                    /* opacity: 70%;
-                    &:hover{
-                      opacity: 100%;
-                    } */
                     `;
                   return (
                   <ThumbWrapper key={photoObj.imgThumbUrl}>
