@@ -7,6 +7,7 @@ import MainPic from './mainPic.jsx';
 import SidebarPics from './sidebarPics.jsx';
 import Thumbnail from './thumbnail.jsx';
 import PopOutFlexPics from './popOutFlexGridPics.jsx';
+import AlbumProcessor from './AlbumIntercept.jsx';
 
 //Styling
 
@@ -151,16 +152,30 @@ const ViewAllCamera = styled.img`
   left: 5%;
 `;
 
+const ThumbCover = styled.div`
+  position: absolute;
+  width: 58px;
+  height: 48px;
+  opacity: 50%;
+  background-color: black;
+  &:hover{
+    opacity: 0%;
+  }
+`;
+
+//styling pop out window
 const PopOutWindowOfPics = styled.div`
   position: absolute;
   top: 2.5%;
   left: 2.5%;
-  width: 95%;
-  height: 95%;
+  width: 95vw;
+  height: 95vh;
   background-color: white;
   opacity: 0%;
   z-index: -2;
   box-shadow: 10px 10px 15px grey;
+  overflow: scroll;
+  font-family: 'Quicksand';
 `;
 
 const ClosePopUpButton = styled.button`
@@ -174,6 +189,8 @@ const ClosePopUpButton = styled.button`
   background-color: white;
   font-size: 1.5em;
   font-weight: bold;
+  overflow: hidden;
+  z-index: 20;
 `;
 
 const GreyOutBackground = styled.div`
@@ -187,30 +204,57 @@ const GreyOutBackground = styled.div`
   z-index: -2;
 `;
 
-const ThumbCover = styled.div`
+
+const PopUpFlexWrappers = styled.div`
   position: absolute;
-  width: 58px;
-  height: 48px;
-  opacity: 50%;
-  background-color: black;
-  &:hover{
-    opacity: 0%;
-  }
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
 `;
 
 const PopOutWindowFlex = styled.div`
   position: absolute;
   display: flex;
+  flex-flow: column wrap;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-content: stretch;
-  overflow: scroll;
   width: 80%;
-  height: 100%;
-  top: 150px;
+  height: 85%;
+  top: 15%;
   right: 0%;
 `;
+
+const AlbumWrapper = styled.div`
+  position: absolute;
+  display: block;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow: scroll;
+  width: 20%;
+  height: 100%;
+  background-color: #e5e5e5;
+`;
+
+const PopOutWindowAlbumGrid = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  margin: 5%;
+  width: 90%;
+  height: 100%;
+`;
+
 
 const FlexPicWrapperSmalls = styled.div`
   margin: 10px;
@@ -218,22 +262,13 @@ const FlexPicWrapperSmalls = styled.div`
 `;
 
 const FlexPicWrapperFull = styled.div`
-  margin: 10px;
   width: 100%;
+  height: 100%;
 `;
 
-const PopOutWindowAlbumGrid = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
-  overflow: scroll;
-  width: 20%;
-  height: 100%;
-  top: 10px;
-  left: 0%;
+const HeaderOfText = styled.span`
+  font-weight: bold;
+  text-decoration: underline;
 `;
 
 //App itself
@@ -339,7 +374,7 @@ class PictureDisplayApp extends React.Component {
     document.getElementById('pictureGreyOutBackground').style.zIndex = -2;
   }
 
-  //Click router
+  //Click router got pop-up window
   toggleWindowMain () {
     this.toggleWindowOpen('main');
   }
@@ -374,15 +409,22 @@ class PictureDisplayApp extends React.Component {
       let most = 0;
       let secondMost = 0;
       let tagArr = [];
+      let tagAlbumArr = [];
 
       let userArr = [];
       this.setState({ photos: res.data });
       this.setState({ mainPhoto: res.data[0].imgMainUrl })
       this.setState({ miniGrid: res.data.slice(0, 20) })
-      // debugger;
+
       res.data.map((photoObj, i) => {
         userArr.push(photoObj.user);
         if (tagObj[photoObj.tag] === undefined) {
+
+          let tempTagObj = {};
+          tempTagObj.tag = photoObj.tag;
+          tempTagObj.photo = photoObj.imgMainUrl;
+          tagAlbumArr.push(tempTagObj);
+
           tagObj[photoObj.tag] = [];
           tagObj[photoObj.tag].push(photoObj);
         } else {
@@ -406,8 +448,11 @@ class PictureDisplayApp extends React.Component {
       userArr = _.uniq(userArr);
       userArr.sort();
       this.setState({ users: userArr });
+
       tagObj.tags = tagArr;
+      tagObj.albums = tagAlbumArr;
       this.setState({ tags: tagObj })
+
       this.setState({ special: res.data[0].special })
 
     })
@@ -434,25 +479,33 @@ class PictureDisplayApp extends React.Component {
         {/* pop out window business */}
         <PopOutWindowOfPics id='picturePopOutWindowOfPics'>
           <ClosePopUpButton onClick={this.toggleWindowClosed}>&#x2573;</ClosePopUpButton>
-          <PopOutWindowFlex>
-            {
-              this.state.flexedPics.map((photo, index) => {
-                if (this.state.isFullSize) {
-                  return (
-                    <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
-                      <PopOutFlexPics photo={photo} />
-                    </FlexPicWrapperFull>
-                  )
-                } else {
-                  return (
-                    <FlexPicWrapperSmalls key={'popOut' + index} id={'FlexPicWrapper'}>
-                      <PopOutFlexPics photo={photo} />
-                    </FlexPicWrapperSmalls>
-                  )
-                }
-              })
-            }
-          </PopOutWindowFlex>
+          <PopUpFlexWrappers>
+            <AlbumWrapper>
+              <PopOutWindowAlbumGrid>
+                <HeaderOfText>Albums Based On Tags: </HeaderOfText>
+                <AlbumProcessor tags={this.state.tags.albums} />
+              </PopOutWindowAlbumGrid>
+            </AlbumWrapper>
+            <PopOutWindowFlex>
+              {
+                this.state.flexedPics.map((photo, index) => {
+                  if (this.state.isFullSize) {
+                    return (
+                      <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
+                        <PopOutFlexPics photo={photo} />
+                      </FlexPicWrapperFull>
+                    )
+                  } else {
+                    return (
+                      <FlexPicWrapperSmalls key={'popOut' + index} id={'FlexPicWrapper'}>
+                        <PopOutFlexPics photo={photo} />
+                      </FlexPicWrapperSmalls>
+                    )
+                  }
+                })
+              }
+            </PopOutWindowFlex>
+          </PopUpFlexWrappers>
         </PopOutWindowOfPics>
         <GreyOutBackground id='pictureGreyOutBackground' onClick={this.toggleWindowClosed}/>
 
