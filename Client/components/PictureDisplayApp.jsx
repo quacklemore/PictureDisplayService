@@ -300,20 +300,24 @@ class PictureDisplayApp extends React.Component {
     }
   }
 
+  getIdFromMainImgUrl(sentUrl) {
+    let indexMain = sentUrl.indexOf('main');
+    let indexJpg = sentUrl.indexOf('.jpg');
+    let id = sentUrl.substring(indexMain + 4, indexJpg);
+    return id;
+  }
+
   changeMainPic (event, sentUrl, callback) {
     let id;
     let newMain;
     if (event === null) {
       newMain = sentUrl;
-      let indexMain = sentUrl.indexOf('main');
-      let indexJpg = sentUrl.indexOf('.jpg');
-      id = sentUrl.substring(indexMain + 4, indexJpg);
+      let id = this.getIdFromMainImgUrl(sentUrl);
       id--;
       this.setState({
         mainPhoto: newMain,
         mainPhotoId: id
       });
-      debugger;
       callback('main', undefined, id);
     } else {
       id = Number.parseInt(event.target.id);
@@ -460,11 +464,19 @@ class PictureDisplayApp extends React.Component {
       let tagAlbumArr = [];
 
       let userArr = [];
-      this.setState({ photos: res.data });
+
+      let sortedPhotos = res.data.sort((photoObj1, photoObj2) => {
+        let id1 = this.getIdFromMainImgUrl(photoObj1.imgMainUrl);
+        let id2 = this.getIdFromMainImgUrl(photoObj2.imgMainUrl);
+        return id1 - id2;
+      })
+
+      this.setState({ photos: sortedPhotos });
       this.setState({ mainPhoto: res.data[0].imgMainUrl })
       this.setState({ miniGrid: res.data.slice(0, 20) })
 
       res.data.map((photoObj, i) => {
+
         userArr.push(photoObj.user);
         if (tagObj[photoObj.tag] === undefined) {
 
