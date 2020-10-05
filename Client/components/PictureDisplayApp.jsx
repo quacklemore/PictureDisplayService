@@ -163,6 +163,7 @@ const ThumbCover = styled.div`
   }
 `;
 
+
 //styling pop out window
 const PopOutWindowOfPics = styled.div`
   position: absolute;
@@ -266,6 +267,15 @@ const FlexPicWrapperFull = styled.div`
   height: 100%;
 `;
 
+const MainHeaderOfText = styled.div`
+  font-weight: bolder;
+  text-decoration: underline;
+  text-align: left;
+  width: 80%;
+  height: 10%;
+  font-size: 2em;
+`;
+
 const HeaderOfText = styled.span`
   font-weight: bold;
   text-decoration: underline;
@@ -285,6 +295,7 @@ class PictureDisplayApp extends React.Component {
       tags: {},
       special: {},
       flexedPics: [],
+      flexPicsIs: '',
       isFullSize: false
     }
   }
@@ -355,9 +366,12 @@ class PictureDisplayApp extends React.Component {
   }
 
   setWindowContent (comp, tag, id) {
+    let statement;
+
     if (comp === 'main') {
       let fullMain = [];
       fullMain.push(id === undefined ? this.state.photos[this.state.mainPhotoId].imgFullUrl : this.state.photos[id].imgFullUrl);
+      statement = 'Selected Photo:';
       this.setState({
         flexedPics: fullMain,
         isFullSize: true
@@ -366,6 +380,7 @@ class PictureDisplayApp extends React.Component {
       let arrayOfMost = this.state.tags[this.state.tags.most].map((photo) => {
         return photo.imgMainUrl;
       });
+      statement = ` #${this.state.tags.most}:`;
       this.setState({
         flexedPics: arrayOfMost,
         isFullSize: false
@@ -374,6 +389,7 @@ class PictureDisplayApp extends React.Component {
       let arrayOfSecMost = this.state.tags[this.state.tags.secondMost].map((photo) => {
         return photo.imgMainUrl;
       });
+      statement = ` #${this.state.tags.secondMost}:`;
       this.setState({
         flexedPics: arrayOfSecMost,
         isFullSize: false
@@ -391,6 +407,7 @@ class PictureDisplayApp extends React.Component {
       let sortedPhotos = arrayOfSorted.map((photo) => {
         return photo.imgMainUrl;
       })
+      statement = `All ${this.state.currentHotel}'s Photos Sorted By User Names Alphabetically:`;
       this.setState({
         flexedPics: sortedPhotos,
         isFullSize: false
@@ -399,6 +416,7 @@ class PictureDisplayApp extends React.Component {
       let specialItems = this.state.photos.map((photo) => {
         return photo.special.specialItem;
       })
+      statement = `${this.state.currentHotel}'s ${this.state.special.specialItemType}s:`;
       this.setState({
         flexedPics: specialItems,
         isFullSize: true
@@ -414,11 +432,15 @@ class PictureDisplayApp extends React.Component {
       let tagPhotoArray = tagArray.map((photo) => {
         return photo.imgMainUrl;
       })
+      statement = ` All Photos for #${tag}:`;
       this.setState({
         flexedPics: tagPhotoArray,
         isFullSize: false
       })
     }
+    this.setState({
+      flexPicsIs: statement
+    })
   }
 
   componentDidMount () {
@@ -488,6 +510,7 @@ class PictureDisplayApp extends React.Component {
   }
 
   renderingChoices () {
+
     if (this.state.photos.length < 20) {
       return (
       <PictureContainer>
@@ -513,6 +536,7 @@ class PictureDisplayApp extends React.Component {
               </PopOutWindowAlbumGrid>
             </AlbumWrapper>
             <PopOutWindowFlex>
+              <MainHeaderOfText>Showing {this.state.flexPicsIs}</MainHeaderOfText>
               {
                 this.state.flexedPics.map((photo, index) => {
                   if (this.state.isFullSize) {
