@@ -211,7 +211,6 @@ const PopUpFlexWrappers = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  justify-content: center;
   width: 100%;
   height: 100%;
   top: 0px;
@@ -224,11 +223,10 @@ const PopOutWindowFlex = styled.div`
   flex-flow: column wrap;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
   align-content: stretch;
   width: 80%;
   height: 85%;
-  top: 15%;
+  top: 6%;
   right: 0%;
 `;
 
@@ -267,13 +265,78 @@ const FlexPicWrapperFull = styled.div`
   height: 100%;
 `;
 
+const PopOutPicArrowLeft = styled.div`
+  position: absolute;
+  top: 50%;
+  margin: -6px;
+  width: 10px;
+  height: 10px;
+  border-left: 4px solid #fff;
+  border-bottom: 4px solid #fff;
+  content: "";
+  border-radius: 3px;
+  left: 50%;
+  transform: rotate(45deg);
+  overflow: hidden;
+`;
+
+const PopOutPicArrowLeftBox = styled.div`
+  opacity: 40%;
+  &:hover {
+    opacity: 100%;
+  }
+  position: absolute;
+  z-index: 2;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  top: 50%;
+  left: 0%;
+  margin-top: -30px;
+  background-color: rgba(0,0,0,.32);
+  border-radius: 0em .5em .5em 0em;
+`;
+
+const PopOutPicArrowRight = styled.div`
+  position: absolute;
+  top: 50%;
+  margin: -6px;
+  width: 10px;
+  height: 10px;
+  border-left: 4px solid #fff;
+  border-bottom: 4px solid #fff;
+  content: "";
+  border-radius: 3px;
+  right: 50%;
+  transform: rotate(225deg);
+  overflow: hidden;
+`;
+
+const PopOutPicArrowRightBox = styled.div`
+  opacity: 40%;
+  &:hover {
+    opacity: 100%;
+  }
+  position: absolute;
+  z-index: 2;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  top: 50%;
+  right: 0%;
+  margin-top: -30px;
+  background-color: rgba(0,0,0,.32);
+  border-radius: .5em 0em 0em .5em;
+`;
+
 const MainHeaderOfText = styled.div`
   font-weight: bolder;
   text-decoration: underline;
   text-align: left;
   width: 80%;
-  height: 10%;
-  font-size: 2em;
+  height: 5%;
+  font-size: 1.2em;
+  padding-left: 20px;
 `;
 
 const HeaderOfText = styled.span`
@@ -307,7 +370,7 @@ class PictureDisplayApp extends React.Component {
     return id;
   }
 
-  changeMainPic (event, sentUrl, callback) {
+  changeMainPic (event, sentUrl, callback = () => {}) {
     let id;
     let newMain;
     if (event === null) {
@@ -326,6 +389,7 @@ class PictureDisplayApp extends React.Component {
         mainPhoto: newMain,
         mainPhotoId: id
       });
+      callback('main', undefined, id);
     }
   }
 
@@ -375,7 +439,7 @@ class PictureDisplayApp extends React.Component {
     if (comp === 'main') {
       let fullMain = [];
       fullMain.push(id === undefined ? this.state.photos[this.state.mainPhotoId].imgFullUrl : this.state.photos[id].imgFullUrl);
-      statement = 'Selected Photo:';
+      statement = `Photo uploaded by ${id === undefined ? this.state.photos[this.state.mainPhotoId].user : this.state.photos[id].user}:`;
       this.setState({
         flexedPics: fullMain,
         isFullSize: true
@@ -384,7 +448,7 @@ class PictureDisplayApp extends React.Component {
       let arrayOfMost = this.state.tags[this.state.tags.most].map((photo) => {
         return photo.imgMainUrl;
       });
-      statement = ` #${this.state.tags.most}:`;
+      statement = `${this.state.tags.most}:`;
       this.setState({
         flexedPics: arrayOfMost,
         isFullSize: false
@@ -393,7 +457,7 @@ class PictureDisplayApp extends React.Component {
       let arrayOfSecMost = this.state.tags[this.state.tags.secondMost].map((photo) => {
         return photo.imgMainUrl;
       });
-      statement = ` #${this.state.tags.secondMost}:`;
+      statement = `${this.state.tags.secondMost}:`;
       this.setState({
         flexedPics: arrayOfSecMost,
         isFullSize: false
@@ -411,7 +475,7 @@ class PictureDisplayApp extends React.Component {
       let sortedPhotos = arrayOfSorted.map((photo) => {
         return photo.imgMainUrl;
       })
-      statement = `All ${this.state.currentHotel}'s Photos Sorted By User Names Alphabetically:`;
+      statement = `All photos, sorted by user name:`;
       this.setState({
         flexedPics: sortedPhotos,
         isFullSize: false
@@ -420,7 +484,7 @@ class PictureDisplayApp extends React.Component {
       let specialItems = this.state.photos.map((photo) => {
         return photo.special.specialItem;
       })
-      statement = `${this.state.currentHotel}'s ${this.state.special.specialItemType}s:`;
+      statement = `${this.state.special.specialItemType}:`;
       this.setState({
         flexedPics: specialItems,
         isFullSize: true
@@ -436,7 +500,7 @@ class PictureDisplayApp extends React.Component {
       let tagPhotoArray = tagArray.map((photo) => {
         return photo.imgMainUrl;
       })
-      statement = ` All Photos for #${tag}:`;
+      statement = `${tag}:`;
       this.setState({
         flexedPics: tagPhotoArray,
         isFullSize: false
@@ -548,13 +612,23 @@ class PictureDisplayApp extends React.Component {
               </PopOutWindowAlbumGrid>
             </AlbumWrapper>
             <PopOutWindowFlex>
-              <MainHeaderOfText>Showing {this.state.flexPicsIs}</MainHeaderOfText>
+              <MainHeaderOfText>{this.state.flexPicsIs}</MainHeaderOfText>
               {
                 this.state.flexedPics.map((photo, index) => {
                   if (this.state.isFullSize) {
                     return (
                       <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
+                        <PopOutPicArrowLeftBox onClick={() => {
+                          this.changeMainPic(event, null , this.setWindowContent.bind(this))
+                        }} id={this.state.mainPhotoId > 0 ? this.state.mainPhotoId - 1 : this.state.photos.length - 1}>
+                          <PopOutPicArrowLeft />
+                        </PopOutPicArrowLeftBox>
                         <PopOutFlexPics photo={photo}  id={index} />
+                        <PopOutPicArrowRightBox onClick={() => {
+                          this.changeMainPic(event, null , this.setWindowContent.bind(this))
+                        }} id={this.state.mainPhotoId < this.state.photos.length - 1 ? this.state.mainPhotoId + 1 : 0}>
+                          <PopOutPicArrowRight />
+                        </PopOutPicArrowRightBox>
                       </FlexPicWrapperFull>
                     )
                   } else {
