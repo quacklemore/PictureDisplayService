@@ -289,15 +289,29 @@ class PictureDisplayApp extends React.Component {
     }
   }
 
-  changeMainPic (event) {
-    event.preventDefault();
-    let change;
-    let id = Number.parseInt(event.target.id);
-    let newMain = this.state.photos[event.target.id].imgMainUrl;
-    this.setState({
-      mainPhoto: newMain,
-      mainPhotoId: id
-    });
+  changeMainPic (event, sentUrl, callback) {
+    let id;
+    let newMain;
+    if (event === null) {
+      newMain = sentUrl;
+      let indexMain = sentUrl.indexOf('main');
+      let indexJpg = sentUrl.indexOf('.jpg');
+      id = sentUrl.substring(indexMain + 4, indexJpg);
+      id--;
+      this.setState({
+        mainPhoto: newMain,
+        mainPhotoId: id
+      });
+      debugger;
+      callback('main', undefined, id);
+    } else {
+      id = Number.parseInt(event.target.id);
+      let newMain = this.state.photos[id].imgMainUrl;
+      this.setState({
+        mainPhoto: newMain,
+        mainPhotoId: id
+      });
+    }
   }
 
   //pop up window
@@ -340,10 +354,10 @@ class PictureDisplayApp extends React.Component {
     this.toggleWindowOpen('special');
   }
 
-  setWindowContent (comp, tag) {
+  setWindowContent (comp, tag, id) {
     if (comp === 'main') {
       let fullMain = [];
-      fullMain.push(this.state.photos[this.state.mainPhotoId].imgFullUrl);
+      fullMain.push(id === undefined ? this.state.photos[this.state.mainPhotoId].imgFullUrl : this.state.photos[id].imgFullUrl);
       this.setState({
         flexedPics: fullMain,
         isFullSize: true
@@ -504,13 +518,15 @@ class PictureDisplayApp extends React.Component {
                   if (this.state.isFullSize) {
                     return (
                       <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
-                        <PopOutFlexPics photo={photo} />
+                        <PopOutFlexPics photo={photo}  id={index} />
                       </FlexPicWrapperFull>
                     )
                   } else {
                     return (
                       <FlexPicWrapperSmalls key={'popOut' + index} id={'FlexPicWrapper'}>
-                        <PopOutFlexPics photo={photo} />
+                        <PopOutFlexPics photo={photo} changePhoto={() => {
+                          this.changeMainPic(null, photo, this.setWindowContent.bind(this))
+                        }}/>
                       </FlexPicWrapperSmalls>
                     )
                   }
