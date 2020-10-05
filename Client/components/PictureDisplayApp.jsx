@@ -175,7 +175,7 @@ const PopOutWindowOfPics = styled.div`
   opacity: 0%;
   z-index: -2;
   box-shadow: 10px 10px 15px grey;
-  overflow: scroll;
+  overflow: auto;
   font-family: 'Quicksand';
 `;
 
@@ -224,6 +224,8 @@ const PopOutWindowFlex = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   align-content: stretch;
+  object-fit: contain;
+  overflow: auto;
   width: 80%;
   height: 85%;
   top: 6%;
@@ -281,7 +283,7 @@ const PopOutPicArrowLeft = styled.div`
 `;
 
 const PopOutPicArrowLeftBox = styled.div`
-  opacity: 40%;
+  opacity: 70%;
   &:hover {
     opacity: 100%;
   }
@@ -313,7 +315,7 @@ const PopOutPicArrowRight = styled.div`
 `;
 
 const PopOutPicArrowRightBox = styled.div`
-  opacity: 40%;
+  opacity: 70%;
   &:hover {
     opacity: 100%;
   }
