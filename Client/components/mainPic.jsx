@@ -7,5 +7,3 @@ const PictureMainViewer = (props) => {
 }
 
 export default PictureMainViewer;
-
-// &#8596;
