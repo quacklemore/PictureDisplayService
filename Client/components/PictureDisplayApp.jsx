@@ -334,11 +334,9 @@ class PictureDisplayApp extends React.Component {
   }
 
   componentDidMount () {
-    axios('/api/pictures/', {
-      method: 'POST',
-      data: {
-        "hotel": this.state.currentHotel
-      }
+    axios({
+      url: `/api/pictures/${this.state.currentHotel}`,
+      method: 'GET'
     })
     .then((res) => {
 
