@@ -1,5 +1,20 @@
 import React from 'react';
 import SidebarSections from './sidebarsections.jsx';
+import styled from 'styled-components';
+
+const TwestComp = styled.div`
+  width: 100px;
+  height: 100px;
+  background-color: green;
+  &:hover{
+    background-color: blue;
+  }
+`;
+
+const SideBarWrappers = styled.div`
+  height: 33.4%;
+  width: 100%;
+`;
 
 const SidebarPics = (props) => {
 
@@ -11,35 +26,35 @@ const SidebarPics = (props) => {
     if (props.special.is) {
       return (
         <div>
-          <div style={{ height: '33.4%', width: '100%'}}  onClick={props.winUser}>
+          <SideBarWrappers onClick={props.winUser}>
             {/* Travelor section */}
             <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl}/>
-          </div>
-          <div style={{ height: '33.4%', width: '100%'}} onClick={props.winMost}>
+          </SideBarWrappers>
+          <SideBarWrappers onClick={props.winMost}>
             {/* most popular tag section */}
             <SidebarSections sectionInfo={props.tags.most} photos={props.tags[props.tags.most]} />
-          </div>
-          <div style={{ height: '33.4%', width: '100%'}} onClick={props.winSpec}>
+          </SideBarWrappers>
+          <SideBarWrappers onClick={props.winSpec}>
             {/* special media section */}
             <SidebarSections sectionInfo={props.special.specialItemType} photos={props.special.thumbnail}/>
-          </div>
+          </SideBarWrappers>
         </div>
     )
     } else {
       return (
         <div>
-          <div style={{ height: '33.5%', width: '100%'}} onClick={props.toggleWindow} onClick={props.winUser}>
+          <SideBarWrappers onClick={props.toggleWindow} onClick={props.winUser}>
             {/* Travelor section */}
             <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl} />
-          </div>
-          <div style={{ height: '33.5%', width: '100%'}} onClick={props.toggleWindow}  onClick={props.winMost}>
+          </SideBarWrappers>
+          <SideBarWrappers onClick={props.toggleWindow}  onClick={props.winMost}>
             {/* most popular tag section */}
             <SidebarSections sectionInfo={props.tags.most} photos={props.tags[props.tags.most]} />
-          </div>
-          <div style={{ height: '33%', width: '100%'}} onClick={props.toggleWindow}  onClick={props.winSecMost}>
+          </SideBarWrappers>
+          <SideBarWrappers onClick={props.toggleWindow}  onClick={props.winSecMost}>
             {/* second most popular tag section */}
             <SidebarSections sectionInfo={props.tags.secondMost} photos={props.tags[props.tags.secondMost]} />
-          </div>
+          </SideBarWrappers>
         </div>
 
     )
