@@ -12,12 +12,13 @@ import AlbumProcessor from './AlbumIntercept.jsx';
 //Styling
 
 const PictureContainer = styled.div`
-display: flex;
-flex-direction: row;
-flex-wrap: nowrap;
-justify-content: flex-start;
-align-items: stretch;
-font-family: 'Quicksand';
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  font-family: 'Quicksand';
+  z-index: 1;
 `;
 
 const PictureMainViewer = styled.div`
@@ -36,6 +37,7 @@ const PictureMiniGrid = styled.div`
   display: flex;
   flex-flow: row wrap;
   max-width: 605px;
+  z-index: 1;
 `;
 
 const PictureSideGrid = styled.div`
@@ -76,20 +78,19 @@ const ClosePopUpButton = styled.button`
   font-size: 1.5em;
   font-weight: bold;
   overflow: hidden;
-  z-index: 20;
+  z-index: 1020;
 `;
 
 const GreyOutBackground = styled.div`
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 100vw;
-  height: 100vh;
+  width: 0.01%;
+  height: 0.01%;
   opacity: 0%;
   background-color: grey;
   z-index: -2;
 `;
-
 
 const PopUpFlexWrappers = styled.div`
   position: absolute;
@@ -217,21 +218,27 @@ class PictureDisplayApp extends React.Component {
 
   //pop up window
   toggleWindowOpen (comp) {
-
     this.setWindowContent(comp);
 
     document.getElementById('picturePopOutWindowOfPics').style.opacity = '100%';
-    document.getElementById('picturePopOutWindowOfPics').style.zIndex = 4;
+    document.getElementById('picturePopOutWindowOfPics').style.width = '95%';
+    document.getElementById('picturePopOutWindowOfPics').style.height = '95%';
+    document.getElementById('picturePopOutWindowOfPics').style.zIndex = 1001;
+    document.getElementById('pictureGreyOutBackground').style.zIndex = 1000;
     document.getElementById('pictureGreyOutBackground').style.opacity = '60%';
-    document.getElementById('pictureGreyOutBackground').style.zIndex = 3;
-
+    document.getElementById('pictureGreyOutBackground').style.width = "100%";
+    document.getElementById('pictureGreyOutBackground').style.height = "100%";
+    document.getElementsByTagName('body')[0].style.overflow = 'hidden';
   }
 
   toggleWindowClosed() {
     document.getElementById('picturePopOutWindowOfPics').style.opacity = '0%';
-    document.getElementById('picturePopOutWindowOfPics').style.zIndex = -3;
+    document.getElementById('picturePopOutWindowOfPics').style.width = '0.01%';
+    document.getElementById('picturePopOutWindowOfPics').style.height = '0.01%';
     document.getElementById('pictureGreyOutBackground').style.opacity = '0%';
-    document.getElementById('pictureGreyOutBackground').style.zIndex = -2;
+    document.getElementById('pictureGreyOutBackground').style.width = "0.01%";
+    document.getElementById('pictureGreyOutBackground').style.height = "0.01%";
+    document.getElementsByTagName('body')[0].style.overflow = 'scroll';
   }
 
   //Click router got pop-up window
@@ -422,8 +429,9 @@ class PictureDisplayApp extends React.Component {
       return (
       <div>
         {/* pop out window business */}
+        {/* ReactDom.createPortal( */}
         <PopOutWindowOfPics id='picturePopOutWindowOfPics'>
-          <ClosePopUpButton onClick={this.toggleWindowClosed}>&#x2573;</ClosePopUpButton>
+          <ClosePopUpButton onClick={this.toggleWindowClosed.bind(this)}>&#x2573;</ClosePopUpButton>
           <PopUpFlexWrappers>
             <AlbumWrapper>
               <PopOutWindowAlbumGrid>
@@ -458,6 +466,7 @@ class PictureDisplayApp extends React.Component {
           </PopUpFlexWrappers>
         </PopOutWindowOfPics>
         <GreyOutBackground id='pictureGreyOutBackground' onClick={this.toggleWindowClosed}/>
+        {/* , document.getElementById('pictureDisplayPortal')) */}
 
         {/* Main module business */}
         <PictureContainer>

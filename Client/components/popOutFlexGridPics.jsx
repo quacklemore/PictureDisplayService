@@ -29,7 +29,7 @@ const PopOutPicArrowLeftBox = styled.div`
     opacity: 100%;
   }
   position: absolute;
-  z-index: 2;
+  z-index: 1002;
   cursor: pointer;
   width: 60px;
   height: 60px;
@@ -61,7 +61,7 @@ const PopOutPicArrowRightBox = styled.div`
     opacity: 100%;
   }
   position: absolute;
-  z-index: 2;
+  z-index: 1002;
   cursor: pointer;
   width: 60px;
   height: 60px;

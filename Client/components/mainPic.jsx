@@ -89,6 +89,7 @@ const MainPicFullView = styled.div`
   display: inline-block;
   top: 30%;
   left: 15%;
+  z-index: 1;
 `;
 
 const ViewAllWithNumber = styled.div`

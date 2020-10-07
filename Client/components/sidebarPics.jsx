@@ -5,6 +5,7 @@ import styled from 'styled-components';
 const TwestComp = styled.div`
   width: 100px;
   height: 100px;
+  z-index: 1;
   background-color: green;
   &:hover{
     background-color: blue;
@@ -14,6 +15,7 @@ const TwestComp = styled.div`
 const SideBarWrappers = styled.div`
   height: 33.4%;
   width: 100%;
+  z-index: 1;
 `;
 
 const SidebarPics = (props) => {

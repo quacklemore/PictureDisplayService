@@ -15,7 +15,7 @@ const AlbumConstraints = styled.div`
 const AlbumText = styled.div`
   position: absolute;
   color: white;
-  z-index: 2, width: 132px;
+  z-index: 1002, width: 132px;
   height: 85px;
   text-shadow: 2px 2px 5px black;
 `;
