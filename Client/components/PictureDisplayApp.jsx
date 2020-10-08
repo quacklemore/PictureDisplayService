@@ -182,7 +182,7 @@ class PictureDisplayApp extends React.Component {
 
   windowIsMost () {
     let arrayOfMost = this.state.tags[this.state.tags.most].map((photo) => {
-      return photo.imgMainUrl;
+      return this.state.isFullSize ? photo.imgFullUrl : photo.imgMainUrl;
     });
     this.setState({
       flexedPics: arrayOfMost,
@@ -192,7 +192,7 @@ class PictureDisplayApp extends React.Component {
 
   windowIsSecMost () {
     let arrayOfSecMost = this.state.tags[this.state.tags.secondMost].map((photo) => {
-      return photo.imgMainUrl;
+      return this.state.isFullSize ? photo.imgFullUrl : photo.imgMainUrl;
     });
     this.setState({
       flexedPics: arrayOfSecMost,
@@ -211,7 +211,7 @@ class PictureDisplayApp extends React.Component {
       }
     });
     let sortedPhotos = arrayOfSorted.map((photo) => {
-      return photo.imgMainUrl;
+      return this.state.isFullSize ? photo.imgFullUrl : photo.imgMainUrl;
     })
     this.setState({
       flexedPics: sortedPhotos,
@@ -219,6 +219,7 @@ class PictureDisplayApp extends React.Component {
     })
   }
 
+  //currently not in use
   windowIsSpecial () {
     let specialItems = this.state.photos.map((photo) => {
       return photo.special.specialItem;
@@ -238,12 +239,16 @@ class PictureDisplayApp extends React.Component {
   windowIsTags (tag) {
     let tagArray = this.state.tags[tag] === undefined ? [] : this.state.tags[tag];
       let tagPhotoArray = tagArray.map((photo) => {
-        return photo.imgMainUrl;
+        return this.state.isFullSize ? photo.imgFullUrl : photo.imgMainUrl;
       })
       this.setState({
         flexedPics: tagPhotoArray,
         isFullSize: false
       })
+  }
+
+  setHotelState(data) {
+
   }
 
   setUpPhotoStates(data) {
@@ -319,6 +324,7 @@ class PictureDisplayApp extends React.Component {
       method: 'GET'
     })
     .then((res) => {
+      this.setHotelState(res.data);
       this.setUpPhotoStates(res.data);
       this.setUpUserState(res.data);
       this.setUpTagsState(res.data);
