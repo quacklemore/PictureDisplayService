@@ -301,12 +301,10 @@ class PictureDisplayApp extends React.Component {
     tagObj.tags = tagArr;
     tagObj.albums = tagAlbumArr;
     this.setState({ tags: tagObj });
-    // console.log('after tags', this.state);
   }
 
   setUpSpecialMediaState(data) {
     this.setState({ special: data });
-    // console.log('after special', this.state);
   }
 
   componentDidMount () {
@@ -328,7 +326,6 @@ class PictureDisplayApp extends React.Component {
   renderingSections () {
 
     if (this.state.tags === undefined || this.state.special === undefined) {
-      // console.log('undefined tags or special!')
       return (
         <div></div>
       )
@@ -339,7 +336,7 @@ class PictureDisplayApp extends React.Component {
         <PictureContainer>
           <div>
             <PictureMainViewer>
-              <MainPic photo={this.state.mainPhoto === undefined ? 'Loading...' : this.state.mainPhoto} changeMainPic={this.changeMainPic.bind(this)} mainPhotoId={this.state.mainPhotoId} photos={this.state.photos === undefined ? ['Loading...'] : this.state.photos} toggleWindowMain={this.setWindowContent.bind(this)}/>
+              <MainPic photo={this.state.mainPhoto === undefined ? 'Loading...' : this.state.mainPhoto} changeMainPic={this.changeMainPic.bind(this)} mainPhotoId={this.state.mainPhotoId} photos={this.state.photos === undefined ? ['Loading...'] : this.state.photos} toggleWindowMain={this.setWindowContent.bind(this, 'main')}/>
             </PictureMainViewer>
             <PictureMiniGrid>
               {
@@ -365,6 +362,7 @@ class PictureDisplayApp extends React.Component {
           changeMainPic={this.changeMainPic.bind(this)}
           mainPhotoId={this.state.mainPhotoId}
           flexedPics={this.state.flexedPics === undefined ? [] : this.state.flexedPics}
+          photos={this.state.photos}
       />
       </div>
       )

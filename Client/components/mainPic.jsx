@@ -135,7 +135,7 @@ const PictureMainViewer = (props) => {
           <ViewAllWithNumber>
             View all {props.photos !== undefined ? props.photos.length : 0} Photos
           </ViewAllWithNumber>
-          <MainGalleryImage src={props.photo} />
+          <MainGalleryImage src={props.photo} onClick={props.toggleWindowMain}/>
         </div>
       </div>
     )
