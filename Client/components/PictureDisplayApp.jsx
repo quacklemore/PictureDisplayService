@@ -90,8 +90,9 @@ class PictureDisplayApp extends React.Component {
       id = this.getIdFromMainImgUrl(sentUrl);
       this.state.isFullSize === false ? id-- : id = id;
     } else {
+      console.log(Number.parseInt(event.target.id));
       id = Number.parseInt(event.target.id);
-      let newMain = this.state.photos[id].imgMainUrl;
+      newMain = this.state.photos[id].imgMainUrl;
     }
 
     if (this.state.windowOpen) {
@@ -341,7 +342,12 @@ class PictureDisplayApp extends React.Component {
         <PictureContainer>
           <div>
             <PictureMainViewer>
-              <MainPic photo={this.state.mainPhoto === undefined ? 'Loading...' : this.state.mainPhoto} changeMainPic={this.changeMainPic.bind(this)} mainPhotoId={this.state.mainPhotoId} photos={this.state.photos === undefined ? ['Loading...'] : this.state.photos} toggleWindowMain={this.setWindowContent.bind(this, 'main')}/>
+              <MainPic
+              photo={this.state.mainPhoto === undefined ? 'Loading...' : this.state.mainPhoto}
+              changeMainPic={this.changeMainPic.bind(this)}
+              mainPhotoId={this.state.mainPhotoId}
+              photos={this.state.photos === undefined ? ['Loading...'] : this.state.photos}
+              toggleWindowMain={this.setWindowContent.bind(this, 'main')}/>
             </PictureMainViewer>
             <PictureMiniGrid>
               {

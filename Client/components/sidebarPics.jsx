@@ -26,7 +26,6 @@ const SidebarPics = (props) => {
       )
     } else {
     if (props.special.is) {
-      debugger;
       return (
         <div>
           <SideBarWrappers onClick={props.winUser}>
