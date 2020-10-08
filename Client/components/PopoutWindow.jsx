@@ -128,7 +128,6 @@ const HeaderOfText = styled.span`
 `;
 
 const PopUpWindow = (props) => {
-  console.log('props', props);
   if (props.flexedPics === undefined) {
     return (
       <div>
@@ -157,13 +156,14 @@ const PopUpWindow = (props) => {
                         <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
                           <PopOutFlexPics photo={photo}  id={index} changePic={() => {
                             props.changeMainPic(event, null , props.toggleWindowMain)
-                          }} picId={props.mainPhotoId > 0 ? props.mainPhotoId - 1 : props.photos.length - 1}/>
+                          }} picId={props.mainPhotoId > 0 ? props.mainPhotoId - 1 : props.photos.length - 1} isFullSize={props.isFullSize} changePic={() => {
+                            props.changeMainPic(null, photo, props.setWindowContent)}}/>
                         </FlexPicWrapperFull>
                       )
                     } else {
                       return (
                         <FlexPicWrapperSmalls key={'popOut' + index} id={'FlexPicWrapper'}>
-                          <PopOutFlexPics photo={photo} changePhoto={() => {
+                          <PopOutFlexPics photo={photo}  isFullSize={props.isFullSize}  changePic={() => {
                             props.changeMainPic(null, photo, props.setWindowContent)
                           }}/>
                         </FlexPicWrapperSmalls>

@@ -73,7 +73,6 @@ const PopOutPicArrowRightBox = styled.div`
 `;
 
 const PopOutFlexPics = (props) => {
-  console.log(props);
   if (props.isFullSize) {
     return (
       <div>
@@ -89,7 +88,7 @@ const PopOutFlexPics = (props) => {
   } else {
     return (
       <div>
-        <FlexedPic src={props.photo} onClick={props.changePhoto} id={props.id} setWindowContent={props.setWindowContent}/>
+        <FlexedPic src={props.photo} onClick={props.changePic} id={props.id} setWindowContent={props.setWindowContent}/>
       </div>
     )
   }

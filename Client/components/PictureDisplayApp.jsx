@@ -69,13 +69,14 @@ class PictureDisplayApp extends React.Component {
       sentUrl: '',
       isFullSize: false,
       windowFullSizeId: 0,
-      windowFullSizePhoto: '',
+      windowFullSizePic: '',
+      windowFullSizePhotos: [],
       windowOpen: false
     }
   }
 
   getIdFromMainImgUrl(sentUrl) {
-    let indexMain = sentUrl.indexOf('main');
+    let indexMain = sentUrl.indexOf('main') === -1 ? sentUrl.indexOf('full') : sentUrl.indexOf('main');
     let indexJpg = sentUrl.indexOf('.jpg');
     let id = sentUrl.substring(indexMain + 4, indexJpg);
     return id;
@@ -84,36 +85,32 @@ class PictureDisplayApp extends React.Component {
   changeMainPic (event, sentUrl, callback = () => {}) {
     let id;
     let newMain;
-    // let stateNamePhoto;
-    // let stateNamePhotoId;
-
-    // if (this.state.windowOpen) {
-    //   stateNameId =
-    // }
-
     if (event === null) {
       newMain = sentUrl;
-      let id = this.getIdFromMainImgUrl(sentUrl);
-      id--;
-      this.setState({
-        mainPhoto: newMain,
-        mainPhotoId: id
-      });
-      callback('main', undefined, id);
+      id = this.getIdFromMainImgUrl(sentUrl);
+      this.state.isFullSize === false ? id-- : id = id;
     } else {
       id = Number.parseInt(event.target.id);
       let newMain = this.state.photos[id].imgMainUrl;
+    }
+
+    if (this.state.windowOpen) {
+      this.setState({
+        windowFullSizePic: newMain,
+        windowFullSizeId: id
+      });
+    } else {
       this.setState({
         mainPhoto: newMain,
         mainPhotoId: id
       });
-      callback('main', undefined, id);
     }
+    callback('main', undefined, id);
   }
 
   //pop up window
   toggleWindowOpen () {
-    // this.renderingSections();
+
     document.getElementById('picturePopOutWindowOfPics').style.opacity = '100%';
     document.getElementById('picturePopOutWindowOfPics').style.width = '95%';
     document.getElementById('picturePopOutWindowOfPics').style.height = '95%';
@@ -126,6 +123,9 @@ class PictureDisplayApp extends React.Component {
   }
 
   toggleWindowClosed() {
+    this.setState({
+      windowOpen: false
+    })
     document.getElementById('picturePopOutWindowOfPics').style.opacity = '0%';
     document.getElementById('picturePopOutWindowOfPics').style.width = '0.01%';
     document.getElementById('picturePopOutWindowOfPics').style.height = '0.01%';
@@ -168,7 +168,12 @@ class PictureDisplayApp extends React.Component {
   windowIsMain (id) {
     let fullMain = [];
     fullMain.push(id === undefined ? this.state.photos[this.state.mainPhotoId].imgFullUrl : this.state.photos[id].imgFullUrl);
+    let photo = this.state.mainPhoto;
+    let photoId = this.state.mainPhotoId;
     this.setState({
+      windowFullSizeId: photoId,
+      windowFullSizePic: photo,
+      windowOpen: true,
       flexedPics: fullMain,
       isFullSize: true
       })
@@ -360,7 +365,7 @@ class PictureDisplayApp extends React.Component {
           flexPicsIs={this.state.flexPicsIs}
           isFullSize={this.state.isFullSize}
           changeMainPic={this.changeMainPic.bind(this)}
-          mainPhotoId={this.state.mainPhotoId}
+          mainPhotoId={this.state.windowFullSizeId}
           flexedPics={this.state.flexedPics === undefined ? [] : this.state.flexedPics}
           photos={this.state.photos}
       />
