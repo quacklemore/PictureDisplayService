@@ -5,6 +5,7 @@ import styled from 'styled-components';
 const TwestComp = styled.div`
   width: 100px;
   height: 100px;
+  z-index: 1;
   background-color: green;
   &:hover{
     background-color: blue;
@@ -14,11 +15,12 @@ const TwestComp = styled.div`
 const SideBarWrappers = styled.div`
   height: 33.4%;
   width: 100%;
+  z-index: 1;
 `;
 
 const SidebarPics = (props) => {
 
-  if (props.users === undefined) {
+  if (props.tags.albums === undefined || props.photos === undefined ) {
     return (
       <div></div>
       )
@@ -28,7 +30,7 @@ const SidebarPics = (props) => {
         <div>
           <SideBarWrappers onClick={props.winUser}>
             {/* Travelor section */}
-            <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl}/>
+            <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl} />
           </SideBarWrappers>
           <SideBarWrappers onClick={props.winMost}>
             {/* most popular tag section */}
@@ -43,7 +45,7 @@ const SidebarPics = (props) => {
     } else {
       return (
         <div>
-          <SideBarWrappers onClick={props.toggleWindow} onClick={props.winUser}>
+          <SideBarWrappers onClick={props.winUser}>
             {/* Travelor section */}
             <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl} />
           </SideBarWrappers>

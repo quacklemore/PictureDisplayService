@@ -15,7 +15,8 @@ const AlbumConstraints = styled.div`
 const AlbumText = styled.div`
   position: absolute;
   color: white;
-  z-index: 2, width: 132px;
+  z-index: 1002;
+  width: 132px;
   height: 85px;
   text-shadow: 2px 2px 5px black;
 `;
@@ -24,15 +25,16 @@ const AlbumImage = styled.img`
   position: relative;
   width: 100%;
   height: 100%;
+  z-index: 1001;
 `;
 
 const PopOutAlbumPics = (props) => {
   return (
 
-    <div style={{postion: 'relative', width: '132px', height: '85px', objectFit: 'contain', overflow: 'hidden', margin: '5px', flexShrink: 0}} onClick={() => {props.changeContent('tag', props.details)}}>
+    <AlbumConstraints onClick={() => {props.changeContent('tag', props.details)}}>
       <AlbumText>{props.details}</AlbumText>
-      <img src={props.photo} />
-    </div>
+      <AlbumImage src={props.photo} />
+    </AlbumConstraints>
 
   )
 }
