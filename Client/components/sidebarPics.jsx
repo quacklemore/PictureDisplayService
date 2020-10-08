@@ -20,17 +20,18 @@ const SideBarWrappers = styled.div`
 
 const SidebarPics = (props) => {
 
-  if (props.users === undefined) {
+  if (props.tags.albums === undefined || props.photos === undefined ) {
     return (
       <div></div>
       )
     } else {
     if (props.special.is) {
+      debugger;
       return (
         <div>
           <SideBarWrappers onClick={props.winUser}>
             {/* Travelor section */}
-            <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl}/>
+            <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl} />
           </SideBarWrappers>
           <SideBarWrappers onClick={props.winMost}>
             {/* most popular tag section */}
@@ -45,7 +46,7 @@ const SidebarPics = (props) => {
     } else {
       return (
         <div>
-          <SideBarWrappers onClick={props.toggleWindow} onClick={props.winUser}>
+          <SideBarWrappers onClick={props.winUser}>
             {/* Travelor section */}
             <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl} />
           </SideBarWrappers>

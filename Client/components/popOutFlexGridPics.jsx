@@ -73,17 +73,26 @@ const PopOutPicArrowRightBox = styled.div`
 `;
 
 const PopOutFlexPics = (props) => {
-  return (
-    <div>
-      <PopOutPicArrowLeftBox onClick={props.changePic} id={props.picId}>
-        <PopOutPicArrowLeft />
-      </PopOutPicArrowLeftBox>
-      <FlexedPic src={props.photo} onClick={props.changePhoto} id={props.id}/>
-      <PopOutPicArrowRightBox onClick={props.changePic} id={props.picId}>
-        <PopOutPicArrowRight />
-      </PopOutPicArrowRightBox>
-    </div>
-  )
+  if (props.isFullSize) {
+    return (
+      <div>
+        <PopOutPicArrowLeftBox onClick={props.changePic} id={props.picId}>
+          <PopOutPicArrowLeft />
+        </PopOutPicArrowLeftBox>
+        <FlexedPic src={props.photo} onClick={props.changePhoto} id={props.id} setWindowContent={props.setWindowContent}/>
+        <PopOutPicArrowRightBox onClick={props.changePic} id={props.picId}>
+          <PopOutPicArrowRight />
+        </PopOutPicArrowRightBox>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <FlexedPic src={props.photo} onClick={props.changePhoto} id={props.id} setWindowContent={props.setWindowContent}/>
+      </div>
+    )
+  }
+
 }
 
 export default PopOutFlexPics;

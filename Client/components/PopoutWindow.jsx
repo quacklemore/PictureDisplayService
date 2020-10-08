@@ -54,6 +54,7 @@ const PopUpFlexWrappers = styled.div`
   height: 100%;
   top: 0px;
   left: 0px;
+  z-index: 1002;
 `;
 
 const PopOutWindowFlex = styled.div`
@@ -69,6 +70,7 @@ const PopOutWindowFlex = styled.div`
   height: 85%;
   top: 6%;
   right: 0%;
+  z-index: 1002;
 `;
 
 const AlbumWrapper = styled.div`
@@ -80,6 +82,7 @@ const AlbumWrapper = styled.div`
   width: 20%;
   height: 100%;
   background-color: #e5e5e5;
+  z-index: 1002;
 `;
 
 const PopOutWindowAlbumGrid = styled.div`
@@ -98,11 +101,13 @@ const PopOutWindowAlbumGrid = styled.div`
 const FlexPicWrapperSmalls = styled.div`
   margin: 5px;
   width: 30%;
+  z-index: 1002;
 `;
 
 const FlexPicWrapperFull = styled.div`
   width: 100%;
   height: 100%;
+  z-index: 1002;
 `;
 
 const MainHeaderOfText = styled.div`
@@ -113,56 +118,67 @@ const MainHeaderOfText = styled.div`
   height: 5%;
   font-size: 1.2em;
   padding-left: 20px;
+  z-index: 1002;
 `;
 
 const HeaderOfText = styled.span`
   font-weight: bold;
   text-decoration: underline;
+  z-index: 1002;
 `;
 
 const PopUpWindow = (props) => {
-
-  return (
-  <div>
-    <PopOutWindowOfPics id='picturePopOutWindowOfPics'>
-          <ClosePopUpButton onClick={props.toggleWindowClosed}>&#x2573;</ClosePopUpButton>
-          <PopUpFlexWrappers>
-            <AlbumWrapper>
-              <PopOutWindowAlbumGrid>
-                <HeaderOfText>Albums Based On Tags: </HeaderOfText>
-                <AlbumProcessor tags={props.tags} changeContent={props.setWindowContent}/>
-              </PopOutWindowAlbumGrid>
-            </AlbumWrapper>
-            <PopOutWindowFlex>
-              <MainHeaderOfText>{props.flexPicsIs}</MainHeaderOfText>
-              {
-                props.flexedPics.map((photo, index) => {
-                  if (props.isFullSize) {
-                    return (
-                      <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
-                        <PopOutFlexPics photo={photo}  id={index} changePic={() => {
-                          props.changeMainPic(event, null , props.setWindowContent)
-                        }} picId={props.mainPhotoId > 0 ? props.mainPhotoId - 1 : props.photos.length - 1}/>
-                      </FlexPicWrapperFull>
-                    )
-                  } else {
-                    return (
-                      <FlexPicWrapperSmalls key={'popOut' + index} id={'FlexPicWrapper'}>
-                        <PopOutFlexPics photo={photo} changePhoto={() => {
-                          props.changeMainPic(null, photo, prop.setWindowContent)
-                        }}/>
-                      </FlexPicWrapperSmalls>
-                    )
-                  }
-                })
-              }
-            </PopOutWindowFlex>
-          </PopUpFlexWrappers>
-        </PopOutWindowOfPics>
-
+  console.log('props', props);
+  if (props.flexedPics === undefined) {
+    return (
+      <div>
+        <PopOutWindowOfPics id='picturePopOutWindowOfPics'></PopOutWindowOfPics>
         <GreyOutBackground id='pictureGreyOutBackground' onClick={props.toggleWindowClosed}/>
       </div>
-  )
+    )
+  } else {
+    return (
+    <div>
+      <PopOutWindowOfPics id='picturePopOutWindowOfPics'>
+            <ClosePopUpButton onClick={props.toggleWindowClosed}>&#x2573;</ClosePopUpButton>
+            <PopUpFlexWrappers>
+              <AlbumWrapper>
+                <PopOutWindowAlbumGrid>
+                  <HeaderOfText>Albums Based On Tags: </HeaderOfText>
+                  <AlbumProcessor tags={props.tags} changeContent={props.setWindowContent}/>
+                </PopOutWindowAlbumGrid>
+              </AlbumWrapper>
+              <PopOutWindowFlex>
+                <MainHeaderOfText>{props.flexPicsIs}</MainHeaderOfText>
+                {
+                  props.flexedPics.map((photo, index) => {
+                    if (props.isFullSize) {
+                      return (
+                        <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
+                          <PopOutFlexPics photo={photo}  id={index} changePic={() => {
+                            props.changeMainPic(event, null , props.toggleWindowMain)
+                          }} picId={props.mainPhotoId > 0 ? props.mainPhotoId - 1 : props.photos.length - 1}/>
+                        </FlexPicWrapperFull>
+                      )
+                    } else {
+                      return (
+                        <FlexPicWrapperSmalls key={'popOut' + index} id={'FlexPicWrapper'}>
+                          <PopOutFlexPics photo={photo} changePhoto={() => {
+                            props.changeMainPic(null, photo, props.setWindowContent)
+                          }}/>
+                        </FlexPicWrapperSmalls>
+                      )
+                    }
+                  })
+                }
+              </PopOutWindowFlex>
+            </PopUpFlexWrappers>
+          </PopOutWindowOfPics>
+
+          <GreyOutBackground id='pictureGreyOutBackground' onClick={props.toggleWindowClosed}/>
+        </div>
+    )
+  }
 
 }
 
