@@ -37,8 +37,9 @@ const seed = () => {
       image.user = faker.name.firstName() + faker.name.lastName();
       image.hotel = hotelName;
       image.tag = tags[tagsNum];
-      specialObj.is = bool;
+      specialObj.is = false;
 
+      //not currently in use
       if (bool) {
         specialObj.specialItem = gamble > .5 ? `https://cdn.wallpapersafari.com/99/98/2IjALn.jpg` : `https://video-direct-tacdn-com.global.ssl.fastly.net/media/video-v/12/d7/52/d4/fiesta-americana-condesa_720.mp4`;
         specialObj.specialItemType = gamble > .5 ? 'panorama' : 'video';
