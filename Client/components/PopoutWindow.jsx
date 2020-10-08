@@ -154,9 +154,10 @@ const PopUpWindow = (props) => {
                     if (props.isFullSize) {
                       return (
                         <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
-                          <PopOutFlexPics photo={photo}  id={index} changePic={() => {
-                            props.changeMainPic(event, null , props.toggleWindowMain)
-                          }} picId={props.mainPhotoId > 0 ? props.mainPhotoId - 1 : props.photos.length - 1} isFullSize={props.isFullSize} changePic={() => {
+                          <PopOutFlexPics photo={photo}  id={index}
+                          picId={props.mainPhotoId > 0 ? props.mainPhotoId - 1 : props.flexedPics.length - 1}
+                          isFullSize={props.isFullSize}
+                          changePic={() => {
                             props.changeMainPic(null, photo, props.setWindowContent)}}/>
                         </FlexPicWrapperFull>
                       )

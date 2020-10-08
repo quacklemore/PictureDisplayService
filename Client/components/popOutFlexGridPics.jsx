@@ -79,7 +79,7 @@ const PopOutFlexPics = (props) => {
         <PopOutPicArrowLeftBox onClick={props.changePic} id={props.picId}>
           <PopOutPicArrowLeft />
         </PopOutPicArrowLeftBox>
-        <FlexedPic src={props.photo} onClick={props.changePhoto} id={props.id} setWindowContent={props.setWindowContent}/>
+        <FlexedPic src={props.photo} onClick={props.changePic} id={props.id} setWindowContent={props.setWindowContent}/>
         <PopOutPicArrowRightBox onClick={props.changePic} id={props.picId}>
           <PopOutPicArrowRight />
         </PopOutPicArrowRightBox>
