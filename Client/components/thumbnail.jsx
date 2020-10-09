@@ -8,6 +8,7 @@ const ThumbCover = styled.div`
   opacity: 50%;
   background-color: black;
   z-index: 2;
+  cursor: pointer;
   &:hover{
     opacity: 0%;
   }

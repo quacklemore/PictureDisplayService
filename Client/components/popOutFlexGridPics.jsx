@@ -5,6 +5,7 @@ const FlexedPic = styled.img`
   width: 100%;
   flex-shrink: 1;
   flex-grow: 1;
+  cursor: pointer;
 `;
 
 

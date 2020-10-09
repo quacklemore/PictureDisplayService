@@ -19,6 +19,7 @@ const AlbumText = styled.div`
   width: 132px;
   height: 85px;
   text-shadow: 2px 2px 5px black;
+  cursor: pointer;
 `;
 
 const AlbumImage = styled.img`

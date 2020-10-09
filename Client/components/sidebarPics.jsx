@@ -16,6 +16,7 @@ const SideBarWrappers = styled.div`
   height: 33.4%;
   width: 100%;
   z-index: 1;
+  cursor: pointer;
 `;
 
 const SidebarPics = (props) => {
