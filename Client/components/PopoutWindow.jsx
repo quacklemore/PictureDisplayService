@@ -6,7 +6,7 @@ import PopOutFlexPics from './popOutFlexGridPics.jsx';
 import AlbumProcessor from './AlbumIntercept.jsx';
 
 const PopOutWindowOfPics = styled.div`
-  position: absolute;
+  position: fixed;
   top: 2.5%;
   left: 2.5%;
   width: 95vw;
@@ -35,7 +35,7 @@ const ClosePopUpButton = styled.button`
 `;
 
 const GreyOutBackground = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 0px;
   width: 0.01%;

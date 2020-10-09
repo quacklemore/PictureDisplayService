@@ -16,7 +16,7 @@ const PictureContainer = styled.div`
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: stretch;
-  font-family: 'Quicksand';
+  font-family: 'Quicksand', Arial;
   z-index: 1;
 `;
 
