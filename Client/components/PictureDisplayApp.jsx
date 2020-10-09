@@ -90,7 +90,6 @@ class PictureDisplayApp extends React.Component {
       id = this.getIdFromMainImgUrl(sentUrl);
       this.state.isFullSize === false ? id-- : id = id;
     } else {
-      console.log(Number.parseInt(event.target.id));
       id = Number.parseInt(event.target.id);
       newMain = this.state.photos[id].imgMainUrl;
     }
