@@ -17,22 +17,26 @@ const saveOnePhoto = (image) => {
 
 
 const seed = () => {
+  Photo.deleteMany({});
   let pictures = [];
 
   for (let i = 0; i < 100; i++) {
     let hotelName = 'hotel' + i;
-    let randNum = Math.floor(Math.random() * 58);
+    let randNum = Math.floor(Math.random() * 58 + 25);
     let bool = (Math.random() > 0.5) ? true : false;
     let specialObj = {};
     let gamble = Math.random();
+    let arrayOfRandom = Math.floor(Math.random() * randNum + 1);
 
-    for (let x = 1; x <= 58; x++) {
-      let tags = ['dogs', 'beach', 'sunshine', 'wonderful', 'goodFood', 'happy'];
-      let tagsNum = Math.floor(Math.random() * 6);
+    for (let x = 1; x <= randNum; x++) {
+      let tags = ['dogs', 'beach', 'sunshine', 'Wonderful', 'Good Food', 'happy', 'sandwich', 'beach life', 'Perfection', 'Okay', 'Passable', 'Overpriced', 'Meh', 'Too Sunny', 'Glaringly Beautiful'];
+      let imageNum = arrayOfRandom[x];
+      let tagsNum = Math.floor(Math.random() * tags.length);
       let image = {};
-      image.imgMainUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/main${x}.jpg`;
-      image.imgFullUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/full${x}.jpg`;
-      image.imgThumbUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/thumb${x}.jpg`;
+      image.imgMainUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/main${imageNum}.jpg`;
+      image.imgFullUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/full${imageNum}.jpg`;
+      image.imgThumbUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/thumb${imageNum}.jpg`;
+
       image.uploadDate = new Date();
       image.user = faker.name.firstName() + faker.name.lastName();
       image.hotel = hotelName;
@@ -49,10 +53,10 @@ const seed = () => {
 
 
       pictures.push(saveOnePhoto(image));
+
     }
-
-
   }
+
   Promise.all(pictures)
   .then(result => {
     mongoose.connection.close();
@@ -60,7 +64,6 @@ const seed = () => {
   .catch((err) => {
     throw err;
   })
-
 }
 
 seed();
