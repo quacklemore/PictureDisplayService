@@ -1,4 +1,6 @@
+const mongoose = require('mongoose');
 const db = require('./db.js');
+const faker = require('faker');
 const Photo = require('./Photo.js');
 
 const saveOnePhoto = (image) => {
@@ -16,7 +18,6 @@ const saveOnePhoto = (image) => {
 
 const seed = () => {
   Photo.deleteMany({});
-
   let pictures = [];
 
   for (let i = 0; i < 100; i++) {
@@ -35,6 +36,7 @@ const seed = () => {
       image.imgMainUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/main${imageNum}.jpg`;
       image.imgFullUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/full${imageNum}.jpg`;
       image.imgThumbUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/thumb${imageNum}.jpg`;
+
       image.uploadDate = new Date();
       image.user = faker.name.firstName() + faker.name.lastName();
       image.hotel = hotelName;
@@ -55,6 +57,16 @@ const seed = () => {
     }
   }
 
-};
+  Promise.all(pictures)
+  .then(result => {
+    mongoose.connection.close();
+  })
+  .catch((err) => {
+    throw err;
+  })
+}
+
+seed();
 
 module.exports = saveOnePhoto;
+
