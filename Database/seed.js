@@ -5,12 +5,12 @@ const _ = require('underscore');
 const mongoUri = require('./mongouri.js');
 const Hotel = require('./Photo.js');
 
-mongoose.connect(mongoUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}, (err) => {
-  mongoose.connection.dropDatabase()
-});
+// mongoose.connect(mongoUri, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// }, (err) => {
+//   mongoose.connection.dropDatabase()
+// });
 
 const saveOneHotel = (hotel) => {
   return new Promise((resolve, reject) => {

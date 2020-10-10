@@ -100,7 +100,7 @@ class PictureDisplayApp extends React.Component {
     callback('main', undefined, sentUrl);
   }
 
-  changeFullPic (event, direction, sentUrl, callback = () => {}) {
+  changeFullPic (id, direction, sentUrl, callback = () => {}) {
     let nextIndex;
     if (sentUrl !== undefined) {
       let sentURLIndex = this.state.windowFullSizePhotos.indexOf(sentUrl);
@@ -109,14 +109,16 @@ class PictureDisplayApp extends React.Component {
       })
     } else {
       nextIndex = this.state.currentFullSizePhotoIndex;
-      if (event === null) {
+      if (id === undefined) {
         if (direction === 'right') {
           nextIndex + 1 > this.state.windowFullSizePhotos.length - 1 ? nextIndex = 0 : nextIndex++;
         } else {
           nextIndex - 1 < 0 ? nextIndex = this.state.windowFullSizePhotos.length - 1 : nextIndex--;
         }
+        sentUrl = this.state.windowFullSizePhotos[nextIndex];
       } else {
-        nextIndex = event.target.id;
+        sentUrl = this.state.flexedPics[id];
+        nextIndex = this.getIndexFromUrl(sentUrl);
       }
       this.setState({
         currentFullSizePhotoIndex: nextIndex
@@ -156,18 +158,17 @@ class PictureDisplayApp extends React.Component {
 
     let statement;
     if (comp === 'main') {
+      debugger;
       if (sentUrl === undefined) {
-        let currentPhotoObjectIndex = this.state.isFullSize ? this.state.currentFullSizePhotoIndex : this.state.currentMainPhotoIndex;
-        statement = `Photo uploaded by ${this.state.photos[currentPhotoObjectIndex].user}:`;
+        let currentPhotoObjectIndex = this.state.currentMainPhotoIndex;
+        let user = this.getUserName(currentPhotoObjectIndex);
+        statement = `Photo uploaded by ${user}:`;
         this.windowIsMain(currentPhotoObjectIndex);
       } else {
-        let currentUser = this.state.photos.map((photoObj) => {
-          if (photoObj.imgFullUrl === sentUrl || photoObj.imgMainUrl === sentUrl ) {
-            return photoObj.user
-          }
-        })
-        statement = `Photo uploaded by ${currentUser[0]}:`;
-        this.windowIsMain(this.state.currentFullSizePhotoIndex);
+        let index = this.getIndexFromUrl(sentUrl);
+        let user = this.getUserName(index);
+        statement = `Photo uploaded by ${user}:`;
+        this.windowIsMain(index);
       }
     } else if (comp === 'most') {
       statement = `${this.state.tags.most}:`;
@@ -188,10 +189,31 @@ class PictureDisplayApp extends React.Component {
     this.toggleWindowOpen();
   }
 
-  windowIsMain (currentPhotoObjectIndex) {
+  getUserName(index, url) {
+    if (url !== undefined) {
+      for (let i = 0; i < this.state.photos.length; i++) {
+        if (this.state.photos[i] === url) {
+          return this.state.photos[i].user;
+        }
+      }
+    } else {
+      return this.state.photos[index].user;
+    }
+  }
+
+  getIndexFromUrl(url) {
+    for (let i = 0; i < this.state.windowFullSizePhotos.length; i++) {
+      if (this.state.windowFullSizePhotos[i] === url || this.state.mainGalleryPhotos[i] === url) {
+        return i;
+      }
+    }
+  }
+
+  windowIsMain (index) {
     let fullMain = [];
-    fullMain.push(this.state.windowFullSizePhotos[currentPhotoObjectIndex]);
+    fullMain.push(this.state.windowFullSizePhotos[index]);
     this.setState({
+      currentFullSizePhotoIndex: index,
       windowOpen: true,
       flexedPics: fullMain,
       isFullSize: true
@@ -276,16 +298,18 @@ class PictureDisplayApp extends React.Component {
     let secondMost = 0;
     let tagAlbumArr = [];
     data.photoObjects.map((photoObj, i) => {
-      if (tagObj[photoObj.tag] === undefined) {
-        let tempTagObj = {};
-        tempTagObj.tag = photoObj.tag;
-        tempTagObj.photo = photoObj.imgMainUrl;
-        tagAlbumArr.push(tempTagObj);
+      if (photoObj.tag !== undefined) {
+        if (tagObj[photoObj.tag] === undefined) {
+          let tempTagObj = {};
+          tempTagObj.tag = photoObj.tag;
+          tempTagObj.photo = photoObj.imgMainUrl;
+          tagAlbumArr.push(tempTagObj);
 
-        tagObj[photoObj.tag] = [];
-        tagObj[photoObj.tag].push(photoObj);
-      } else {
-        tagObj[photoObj.tag].push(photoObj);
+          tagObj[photoObj.tag] = [];
+          tagObj[photoObj.tag].push(photoObj);
+        } else {
+          tagObj[photoObj.tag].push(photoObj);
+        }
       }
     })
     for (let key in tagObj) {
@@ -313,7 +337,6 @@ class PictureDisplayApp extends React.Component {
       method: 'GET'
     })
     .then((res) => {
-      console.log(res.data[0]);
       this.setHotelState(res.data[0]);
       this.setUpPhotoStates(res.data[0]);
       this.setUpUserState(res.data[0]);

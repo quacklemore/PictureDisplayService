@@ -107,6 +107,7 @@ const FlexPicWrapperSmalls = styled.div`
 const FlexPicWrapperFull = styled.div`
   width: 100%;
   height: 100%;
+  align-content: flex-start;
   z-index: 1002;
 `;
 
@@ -152,7 +153,6 @@ const PopUpWindow = ({flexedPics, toggleWindowClosed, tags, setWindowContent, fl
                 {
                   flexedPics.map((photo, index) => {
                     if (isFullSize) {
-                      console.log('photo being plugged in', photo);
                       return (
                         <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
                           <PopOutFlexPics photo={photo}  id={index}

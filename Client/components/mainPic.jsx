@@ -126,8 +126,6 @@ const PictureMainViewer = ({changeMainPic, toggleWindowMain, photos, MainGallery
           <MainPicArrowRight />
         </MainPicArrowRightBox>
         <div onClick={() => {
-            console.log('clicked image: ', MainGalleryPicture);
-            debugger;
             toggleWindowMain('main', undefined, MainGalleryPicture);
           }}
           name='viewAllPics'>
@@ -141,7 +139,6 @@ const PictureMainViewer = ({changeMainPic, toggleWindowMain, photos, MainGallery
             View all {photos !== undefined ? photos.length : 0} Photos
           </ViewAllWithNumber>
           <MainGalleryImage src={MainGalleryPicture} onClick={() => {
-            console.log('clicked image: ', MainGalleryPicture);
             toggleWindowMain();
           }}/>
         </div>

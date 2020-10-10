@@ -8,6 +8,11 @@ const FlexedPic = styled.img`
   cursor: pointer;
 `;
 
+const FlexedPicFull = styled.img`
+  width: 100%;
+  flex-shrink: 1;
+  flex-grow: 1;
+`;
 
 const PopOutPicArrowLeft = styled.div`
   position: absolute;
@@ -78,16 +83,13 @@ const PopOutFlexPics = ({isFullSize, changePic, changePicWithDirections, id, pho
     return (
       <div>
         <PopOutPicArrowLeftBox onClick={() => {
-          changePicWithDirections(null, 'left', undefined, setWindowContent);
+          changePicWithDirections(undefined, 'left', undefined, setWindowContent);
         }} id={id}>
           <PopOutPicArrowLeft />
         </PopOutPicArrowLeftBox>
-        <FlexedPic src={photo} onClick={() => {
-          console.log('clicked on line 86 of pofg');
-          changePic(null, null, photo, setWindowContent)
-        }} id={id}/>
+        <FlexedPicFull src={photo} id={id}/>
         <PopOutPicArrowRightBox onClick={() => {
-          changePicWithDirections(null, 'right', undefined, setWindowContent);
+          changePicWithDirections(undefined, 'right', undefined, setWindowContent);
         }} id={id}>
           <PopOutPicArrowRight />
         </PopOutPicArrowRightBox>
@@ -96,7 +98,9 @@ const PopOutFlexPics = ({isFullSize, changePic, changePicWithDirections, id, pho
   } else {
     return (
       <div>
-        <FlexedPic src={photo} onClick={changePic} id={id}/>
+        <FlexedPic src={photo} onClick={() => {
+          changePic(id, undefined, undefined, setWindowContent)
+        }} id={id}/>
       </div>
     )
   }
