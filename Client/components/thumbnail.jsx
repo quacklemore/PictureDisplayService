@@ -27,11 +27,11 @@ const ThumbWrapper = styled.div`
   height: 50px;
 `;
 
-const Thumbnail = (props) => {
+const Thumbnail = ({id, changePic, photo}) => {
   return (
     <ThumbWrapper>
-      <ThumbCover id={props.id} onClick={props.changePic}/>
-      <ThumbnailImg src={props.photo} onClick={props.changePic} id={props.id}/>
+      <ThumbCover id={id} onClick={changePic}/>
+      <ThumbnailImg src={photo} />
     </ThumbWrapper>
   )
 }

@@ -8,6 +8,11 @@ const FlexedPic = styled.img`
   cursor: pointer;
 `;
 
+const FlexedPicFull = styled.img`
+  width: 100%;
+  flex-shrink: 1;
+  flex-grow: 1;
+`;
 
 const PopOutPicArrowLeft = styled.div`
   position: absolute;
@@ -73,15 +78,19 @@ const PopOutPicArrowRightBox = styled.div`
   border-radius: .5em 0em 0em .5em;
 `;
 
-const PopOutFlexPics = (props) => {
-  if (props.isFullSize) {
+const PopOutFlexPics = ({isFullSize, changePic, changePicWithDirections, id, photo, setWindowContent}) => {
+  if (isFullSize) {
     return (
       <div>
-        <PopOutPicArrowLeftBox onClick={props.changePic} id={props.picId}>
+        <PopOutPicArrowLeftBox onClick={() => {
+          changePicWithDirections(undefined, 'left', undefined, setWindowContent);
+        }} id={id}>
           <PopOutPicArrowLeft />
         </PopOutPicArrowLeftBox>
-        <FlexedPic src={props.photo} onClick={props.changePic} id={props.id} setWindowContent={props.setWindowContent}/>
-        <PopOutPicArrowRightBox onClick={props.changePic} id={props.picId}>
+        <FlexedPicFull src={photo} id={id}/>
+        <PopOutPicArrowRightBox onClick={() => {
+          changePicWithDirections(undefined, 'right', undefined, setWindowContent);
+        }} id={id}>
           <PopOutPicArrowRight />
         </PopOutPicArrowRightBox>
       </div>
@@ -89,7 +98,9 @@ const PopOutFlexPics = (props) => {
   } else {
     return (
       <div>
-        <FlexedPic src={props.photo} onClick={props.changePic} id={props.id} setWindowContent={props.setWindowContent}/>
+        <FlexedPic src={photo} onClick={() => {
+          changePic(id, undefined, undefined, setWindowContent)
+        }} id={id}/>
       </div>
     )
   }

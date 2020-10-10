@@ -1,14 +1,17 @@
 import React from 'react';
 import PopOutAlbumPics from './popOutAlbumGridPics.jsx';
 
-const AlbumProcessor = (props) => {
-  if (props.tags === undefined) {
+const AlbumProcessor = ({tags, setWindowContent}) => {
+  if (tags === undefined) {
     return <div></div>
   } else {
     return (
-        props.tags.map((albumObj, index) => {
+        tags.map((albumObj, index) => {
+          let tag = albumObj.tag;
           return (
-              <PopOutAlbumPics photo={albumObj.photo} details={albumObj.tag} key={'album' + index} changeContent={props.changeContent}/>
+              <PopOutAlbumPics photo={albumObj.photo} details={tag} key={'album' + index} changeContent={() => {
+                setWindowContent('tag', tag);
+              }}/>
           )
         })
     )

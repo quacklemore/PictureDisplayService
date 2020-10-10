@@ -107,6 +107,7 @@ const FlexPicWrapperSmalls = styled.div`
 const FlexPicWrapperFull = styled.div`
   width: 100%;
   height: 100%;
+  align-content: flex-start;
   z-index: 1002;
 `;
 
@@ -127,46 +128,49 @@ const HeaderOfText = styled.span`
   z-index: 1002;
 `;
 
-const PopUpWindow = (props) => {
-  if (props.flexedPics === undefined) {
+const PopUpWindow = ({flexedPics, toggleWindowClosed, tags, setWindowContent, flexPicsIs, isFullSize, mainPicIndex, changeFullPic}) => {
+  if (flexedPics === undefined) {
     return (
       <div>
         <PopOutWindowOfPics id='picturePopOutWindowOfPics'></PopOutWindowOfPics>
-        <GreyOutBackground id='pictureGreyOutBackground' onClick={props.toggleWindowClosed}/>
+        <GreyOutBackground id='pictureGreyOutBackground' onClick={toggleWindowClosed}/>
       </div>
     )
   } else {
     return (
     <div>
       <PopOutWindowOfPics id='picturePopOutWindowOfPics'>
-            <ClosePopUpButton onClick={props.toggleWindowClosed}>&#x2573;</ClosePopUpButton>
+            <ClosePopUpButton onClick={toggleWindowClosed}>&#x2573;</ClosePopUpButton>
             <PopUpFlexWrappers>
               <AlbumWrapper>
                 <PopOutWindowAlbumGrid>
                   <HeaderOfText>Albums Based On Tags: </HeaderOfText>
-                  <AlbumProcessor tags={props.tags} changeContent={props.setWindowContent}/>
+                  <AlbumProcessor tags={tags} setWindowContent={setWindowContent}/>
                 </PopOutWindowAlbumGrid>
               </AlbumWrapper>
               <PopOutWindowFlex>
-                <MainHeaderOfText>{props.flexPicsIs}</MainHeaderOfText>
+                <MainHeaderOfText>{flexPicsIs}</MainHeaderOfText>
                 {
-                  props.flexedPics.map((photo, index) => {
-                    if (props.isFullSize) {
+                  flexedPics.map((photo, index) => {
+                    if (isFullSize) {
                       return (
                         <FlexPicWrapperFull key={'popOut' + index} id={'FlexPicWrapper'}>
                           <PopOutFlexPics photo={photo}  id={index}
-                          picId={props.mainPhotoId > 0 ? props.mainPhotoId - 1 : props.flexedPics.length - 1}
-                          isFullSize={props.isFullSize}
-                          changePic={() => {
-                            props.changeMainPic(null, photo, props.setWindowContent)}}/>
+                          isFullSize={isFullSize}
+                          changePic={changeFullPic}
+                          changePicWithDirections={changeFullPic}
+                          setWindowContent={setWindowContent}/>
                         </FlexPicWrapperFull>
                       )
                     } else {
                       return (
                         <FlexPicWrapperSmalls key={'popOut' + index} id={'FlexPicWrapper'}>
-                          <PopOutFlexPics photo={photo}  isFullSize={props.isFullSize}  changePic={() => {
-                            props.changeMainPic(null, photo, props.setWindowContent)
-                          }}/>
+                          <PopOutFlexPics
+                          photo={photo}
+                          isFullSize={isFullSize}
+                          changePic={changeFullPic}
+                          setWindowContent={setWindowContent}
+                          id={index}/>
                         </FlexPicWrapperSmalls>
                       )
                     }
@@ -176,7 +180,7 @@ const PopUpWindow = (props) => {
             </PopUpFlexWrappers>
           </PopOutWindowOfPics>
 
-          <GreyOutBackground id='pictureGreyOutBackground' onClick={props.toggleWindowClosed}/>
+          <GreyOutBackground id='pictureGreyOutBackground' onClick={toggleWindowClosed}/>
         </div>
     )
   }

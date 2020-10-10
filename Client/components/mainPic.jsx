@@ -111,21 +111,24 @@ const MainGalleryImage = styled.img`
   object-fit: cover;
 `;
 
-const PictureMainViewer = (props) => {
-  if (props.photos === undefined) {
+const PictureMainViewer = ({changeMainPic, toggleWindowMain, photos, MainGalleryPicture}) => {
+  if (photos === undefined) {
     return (
       <div></div>
     )
   } else {
     return (
       <div>
-        <MainPicArrowLeftBox onClick={props.changeMainPic} id={props.mainPhotoId > 0 ? props.mainPhotoId - 1 : props.photos.length - 1}>
+        <MainPicArrowLeftBox onClick={() => {changeMainPic(null, 'left')}} >
         <MainPicArrowLeft />
         </MainPicArrowLeftBox>
-        <MainPicArrowRightBox onClick={props.changeMainPic} id={props.mainPhotoId < props.photos.length - 1 ? props.mainPhotoId + 1 : 0}>
+        <MainPicArrowRightBox onClick={() => {changeMainPic(null, 'right')}} >
           <MainPicArrowRight />
         </MainPicArrowRightBox>
-        <div onClick={props.toggleWindowMain} name='viewAllPics'>
+        <div onClick={() => {
+            toggleWindowMain('main', undefined, MainGalleryPicture);
+          }}
+          name='viewAllPics'>
           <MainPicFullViewBox>
             <MainPicFullView>
                 &#x2922;  Full View
@@ -133,9 +136,11 @@ const PictureMainViewer = (props) => {
           </MainPicFullViewBox>
           <ViewAllCamera src={'https://tripadcoba.s3-us-west-1.amazonaws.com/camera-512.png'} />
           <ViewAllWithNumber>
-            View all {props.photos !== undefined ? props.photos.length : 0} Photos
+            View all {photos !== undefined ? photos.length : 0} Photos
           </ViewAllWithNumber>
-          <MainGalleryImage src={props.photo} onClick={props.toggleWindowMain}/>
+          <MainGalleryImage src={MainGalleryPicture} onClick={() => {
+            toggleWindowMain();
+          }}/>
         </div>
       </div>
     )

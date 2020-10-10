@@ -29,12 +29,11 @@ const AlbumImage = styled.img`
   z-index: 1001;
 `;
 
-const PopOutAlbumPics = (props) => {
+const PopOutAlbumPics = ({changeContent, details, photo}) => {
   return (
-
-    <AlbumConstraints onClick={() => {props.changeContent('tag', props.details)}}>
-      <AlbumText>{props.details}</AlbumText>
-      <AlbumImage src={props.photo} />
+    <AlbumConstraints onClick={() => {changeContent('tag', details)}}>
+      <AlbumText>{details}</AlbumText>
+      <AlbumImage src={photo} />
     </AlbumConstraints>
 
   )

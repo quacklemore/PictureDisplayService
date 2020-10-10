@@ -1,11 +1,20 @@
 const mongoose = require('mongoose');
 const db = require('./db.js');
 const faker = require('faker');
-const Photo = require('./Photo.js');
+const _ = require('underscore');
+const mongoUri = require('./mongouri.js');
+const Hotel = require('./Photo.js');
 
-const saveOnePhoto = (image) => {
+// mongoose.connect(mongoUri, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// }, (err) => {
+//   mongoose.connection.dropDatabase()
+// });
+
+const saveOneHotel = (hotel) => {
   return new Promise((resolve, reject) => {
-    Photo.create(image, (err, result) => {
+    Hotel.create(hotel, (err, result) => {
       if (err) {
         reject(err);
       } else {
@@ -15,49 +24,72 @@ const saveOnePhoto = (image) => {
   });
 };
 
-
 const seed = () => {
-  Photo.deleteMany({});
-  let pictures = [];
+  let hotels = [];
 
   for (let i = 0; i < 100; i++) {
-    let hotelName = 'hotel' + i;
-    let randNum = Math.floor(Math.random() * 58 + 25);
-    let bool = (Math.random() > 0.5) ? true : false;
-    let specialObj = {};
-    let gamble = Math.random();
-    let arrayOfRandom = Math.floor(Math.random() * randNum + 1);
+    let pictures = [];
+    let thumbnailArray = [];
+    let fullSizeArray = [];
+    let mainImgSizeArray = [];
+    let userArray = [];
+    let hotelObj = {};
 
-    for (let x = 1; x <= randNum; x++) {
-      let tags = ['dogs', 'beach', 'sunshine', 'Wonderful', 'Good Food', 'happy', 'sandwich', 'beach life', 'Perfection', 'Okay', 'Passable', 'Overpriced', 'Meh', 'Too Sunny', 'Glaringly Beautiful'];
-      let imageNum = arrayOfRandom[x];
-      let tagsNum = Math.floor(Math.random() * tags.length);
+    let randNum = (25 + Math.random() * (58 - 25));
+    let bool = (Math.random() > 0.5) ? true : false; //DO I NEED
+    let gamble = Math.random();//DO I NEED
+
+    let totalNumberOfPictures = Array.from(Array(58).keys());
+    let arrayOfRandom = totalNumberOfPictures.map((nothing, index) => {
+    let randNum = (Math.floor(Math.random() * 58 + 1));
+      return randNum;
+    });
+    arrayOfRandom = _.uniq((arrayOfRandom));
+    let length = arrayOfRandom.length;
+
+    let tags = ['dogs', 'beach', 'sunshine', 'Wonderful', 'Good Food', 'happy', 'sandwich', 'beach life', 'Perfection', 'Okay', 'Passable', 'Overpriced', 'Meh', 'Too Sunny', 'Glaringly Beautiful'];
+    let tagsNum = Math.floor(Math.random() * (tags.length - 1));
+    let tagsNumArray = [];
+    for (let i = 0; i < tagsNum; i++) {
+      tagsNumArray.push(Math.floor(Math.random() * tags.length));
+    }
+
+    tagsForThisHotel = tagsNumArray.map((number) => {
+      return tags[number];
+    })
+
+    hotelObj.tags = _.uniq((tagsForThisHotel));
+    hotelObj.name = 'hotel' + i;
+
+    for (let x = 1; x <= length; x++) {
+      let imageNum = arrayOfRandom.pop();
       let image = {};
       image.imgMainUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/main${imageNum}.jpg`;
       image.imgFullUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/full${imageNum}.jpg`;
       image.imgThumbUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/thumb${imageNum}.jpg`;
+      mainImgSizeArray.push(`https://tripadcoba.s3-us-west-1.amazonaws.com/main${imageNum}.jpg`);
+      fullSizeArray.push(`https://tripadcoba.s3-us-west-1.amazonaws.com/full${imageNum}.jpg`);
+      thumbnailArray.push(`https://tripadcoba.s3-us-west-1.amazonaws.com/thumb${imageNum}.jpg`);
 
       image.uploadDate = new Date();
       image.user = faker.name.firstName() + faker.name.lastName();
-      image.hotel = hotelName;
-      image.tag = tags[tagsNum];
-      specialObj.is = false;
+      userArray.push(image.user);
+      image.hotel = hotelObj.name;
+      image.tag = hotelObj.tags[Math.floor(Math.random() * hotelObj.tags.length - 1)];
 
-      //not currently in use
-      if (bool) {
-        specialObj.specialItem = gamble > .5 ? `https://cdn.wallpapersafari.com/99/98/2IjALn.jpg` : `https://video-direct-tacdn-com.global.ssl.fastly.net/media/video-v/12/d7/52/d4/fiesta-americana-condesa_720.mp4`;
-        specialObj.specialItemType = gamble > .5 ? 'panorama' : 'video';
-        specialObj.thumbnail = gamble > .5 ? 'https://tripadcoba.s3-us-west-1.amazonaws.com/pano1.jpg' : 'https://tripadcoba.s3-us-west-1.amazonaws.com/video1.jpg';
-      }
-      image.special = specialObj
-
-
-      pictures.push(saveOnePhoto(image));
-
+      pictures.push(image);
     }
+
+    hotelObj.FullPhotos = fullSizeArray;
+    hotelObj.MainPhotos = mainImgSizeArray;
+    hotelObj.ThumbnailPhotos = thumbnailArray;
+    hotelObj.users = userArray;
+    hotelObj.photoObjects = pictures;
+    hotels.push(saveOneHotel(hotelObj));
   }
 
-  Promise.all(pictures)
+
+  Promise.all(hotels)
   .then(result => {
     mongoose.connection.close();
   })
@@ -68,5 +100,5 @@ const seed = () => {
 
 seed();
 
-module.exports = saveOnePhoto;
+module.exports = saveOneHotel;
 

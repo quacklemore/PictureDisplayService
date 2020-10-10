@@ -1,22 +1,16 @@
 const mongoose = require('mongoose');
 const db = require('./db.js');
 
-const pictureSchema = new mongoose.Schema({
-  imgMainUrl: String,
-  imgFullUrl: String,
-  imgThumbUrl: String,
-  uploadDate: Date,
-  user: String,
-  hotel: String,
-  tag: String,
-  special: {
-    is: Boolean,
-    specialItem: String,
-    specialItemType: String,
-    thumbnail: String
-  }
+const HotelsSchema = new mongoose.Schema({
+  name: String,
+  FullPhotos: Array,
+  MainPhotos: Array,
+  ThumbnailPhotos: Array,
+  users: Array,
+  tags: Array,
+  photoObjects: Array
 });
 
-const Photo = mongoose.model('Photo', pictureSchema);
+const Hotel = mongoose.model('Hotel', HotelsSchema);
 
-module.exports = Photo;
+module.exports = Hotel;
