@@ -19,50 +19,32 @@ const SideBarWrappers = styled.div`
   cursor: pointer;
 `;
 
-const SidebarPics = (props) => {
+const SidebarPics = ({users, winUser, tags, photos, toggleWindow, winMost, winSecMost}) => {
 
-  if (props.tags.albums === undefined || props.photos === undefined ) {
+  if (tags.albums === undefined || photos === undefined ) {
     return (
       <div></div>
       )
-    } else {
-    if (props.special.is) {
-      return (
-        <div>
-          <SideBarWrappers onClick={props.winUser}>
-            {/* Travelor section */}
-            <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl} />
-          </SideBarWrappers>
-          <SideBarWrappers onClick={props.winMost}>
-            {/* most popular tag section */}
-            <SidebarSections sectionInfo={props.tags.most} photos={props.tags[props.tags.most]} />
-          </SideBarWrappers>
-          <SideBarWrappers onClick={props.winSpec}>
-            {/* special media section */}
-            <SidebarSections sectionInfo={props.special.specialItemType} photos={props.special.thumbnail}/>
-          </SideBarWrappers>
-        </div>
-    )
-    } else {
-      return (
-        <div>
-          <SideBarWrappers onClick={props.winUser}>
-            {/* Travelor section */}
-            <SidebarSections sectionInfo={`Travelers (${props.users.length})`} photos={props.photos[21].imgMainUrl} />
-          </SideBarWrappers>
-          <SideBarWrappers onClick={props.toggleWindow}  onClick={props.winMost}>
-            {/* most popular tag section */}
-            <SidebarSections sectionInfo={props.tags.most} photos={props.tags[props.tags.most]} />
-          </SideBarWrappers>
-          <SideBarWrappers onClick={props.toggleWindow}  onClick={props.winSecMost}>
-            {/* second most popular tag section */}
-            <SidebarSections sectionInfo={props.tags.secondMost} photos={props.tags[props.tags.secondMost]} />
-          </SideBarWrappers>
-        </div>
+  } else {
+    return (
+      <div>
+        <SideBarWrappers onClick={winUser}>
+          {/* Travelor section */}
+          <SidebarSections sectionInfo={`Travelers (${users.length})`} photos={photos[21]} />
+        </SideBarWrappers>
+        <SideBarWrappers onClick={toggleWindow}  onClick={winMost}>
+          {/* most popular tag section */}
+          <SidebarSections sectionInfo={tags.most} photos={tags[tags.most]} />
+        </SideBarWrappers>
+        <SideBarWrappers onClick={toggleWindow}  onClick={winSecMost}>
+          {/* second most popular tag section */}
+          <SidebarSections sectionInfo={tags.secondMost} photos={tags[tags.secondMost]} />
+        </SideBarWrappers>
+      </div>
 
     )
-    }
   }
+
 
 }
 

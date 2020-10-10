@@ -58,54 +58,71 @@ class PictureDisplayApp extends React.Component {
     this.state = {
       currentHotel: 'hotel0',
       photos: [],
-      users: [],
-      mainPhoto: '',
-      mainPhotoId: 0,
+      mainGalleryPhotos: [],
+      currentMainPhotoIndex: 0,
       miniGrid: [],
+      windowFullSizePhotos: [],
+      currentFullSizePhotoIndex: 0,
+      users: [],
       tags: {},
-      special: {},
-      flexedPics: [],
       flexPicsIs: '',
+      flexedPics: [],
       sentUrl: '',
       isFullSize: false,
-      windowFullSizeId: 0,
-      windowFullSizePic: '',
-      windowFullSizePhotos: [],
       windowOpen: false
     }
   }
 
-  getIdFromMainImgUrl(sentUrl) {
-    let indexMain = sentUrl.indexOf('main') === -1 ? sentUrl.indexOf('full') : sentUrl.indexOf('main');
-    let indexJpg = sentUrl.indexOf('.jpg');
-    let id = sentUrl.substring(indexMain + 4, indexJpg);
-    return id;
+  changeMainPic (event, direction, sentUrl, callback = () => {}) {
+    let nextIndex;
+    if (sentUrl !== undefined) {
+      let sentURLIndex = this.state.windowFullSizePhotos.indexOf(sentUrl);
+      this.setState({
+        currentFullSizePhotoIndex: sentURLIndex
+      })
+    } else {
+      nextIndex = this.state.currentMainPhotoIndex;
+      if (event === null) {
+        if (direction === 'right') {
+          nextIndex + 1 > this.state.mainGalleryPhotos.length - 1 ? nextIndex = 0 : nextIndex++;
+        } else {
+          nextIndex - 1 < 0 ? nextIndex = this.state.mainGalleryPhotos.length - 1 : nextIndex--;
+        }
+      } else {
+        nextIndex = event.target.id;
+      }
+      this.setState({
+        currentMainPhotoIndex: nextIndex
+      })
+
+    }
+
+    callback('main', undefined, sentUrl);
   }
 
-  changeMainPic (event, sentUrl, callback = () => {}) {
-    let id;
-    let newMain;
-    if (event === null) {
-      newMain = sentUrl;
-      id = this.getIdFromMainImgUrl(sentUrl);
-      this.state.isFullSize === false ? id-- : id = id;
-    } else {
-      id = Number.parseInt(event.target.id);
-      newMain = this.state.photos[id].imgMainUrl;
-    }
-
-    if (this.state.windowOpen) {
+  changeFullPic (event, direction, sentUrl, callback = () => {}) {
+    let nextIndex;
+    if (sentUrl !== undefined) {
+      let sentURLIndex = this.state.windowFullSizePhotos.indexOf(sentUrl);
       this.setState({
-        windowFullSizePic: newMain,
-        windowFullSizeId: id
-      });
+        currentFullSizePhotoIndex: sentURLIndex
+      })
     } else {
+      nextIndex = this.state.currentFullSizePhotoIndex;
+      if (event === null) {
+        if (direction === 'right') {
+          nextIndex + 1 > this.state.windowFullSizePhotos.length - 1 ? nextIndex = 0 : nextIndex++;
+        } else {
+          nextIndex - 1 < 0 ? nextIndex = this.state.windowFullSizePhotos.length - 1 : nextIndex--;
+        }
+      } else {
+        nextIndex = event.target.id;
+      }
       this.setState({
-        mainPhoto: newMain,
-        mainPhotoId: id
-      });
+        currentFullSizePhotoIndex: nextIndex
+      })
     }
-    callback('main', undefined, id);
+    callback('main', undefined, sentUrl);
   }
 
   //pop up window
@@ -135,13 +152,23 @@ class PictureDisplayApp extends React.Component {
     document.getElementsByTagName('body')[0].style.overflow = 'scroll';
   }
 
-  setWindowContent (comp, tag, id) {
+  setWindowContent (comp, tag, sentUrl) {
 
     let statement;
-
     if (comp === 'main') {
-      statement = `Photo uploaded by ${id === undefined ? this.state.photos[this.state.mainPhotoId].user : this.state.photos[id].user}:`;
-      this.windowIsMain(id);
+      if (sentUrl === undefined) {
+        let currentPhotoObjectIndex = this.state.isFullSize ? this.state.currentFullSizePhotoIndex : this.state.currentMainPhotoIndex;
+        statement = `Photo uploaded by ${this.state.photos[currentPhotoObjectIndex].user}:`;
+        this.windowIsMain(currentPhotoObjectIndex);
+      } else {
+        let currentUser = this.state.photos.map((photoObj) => {
+          if (photoObj.imgFullUrl === sentUrl || photoObj.imgMainUrl === sentUrl ) {
+            return photoObj.user
+          }
+        })
+        statement = `Photo uploaded by ${currentUser[0]}:`;
+        this.windowIsMain(this.state.currentFullSizePhotoIndex);
+      }
     } else if (comp === 'most') {
       statement = `${this.state.tags.most}:`;
       this.windowIsMost();
@@ -151,9 +178,6 @@ class PictureDisplayApp extends React.Component {
     } else if (comp === 'user') {
       statement = `All photos, sorted by user name:`;
       this.windowIsUser();
-    } else if (comp === 'special') {
-      statement = `${this.state.special.specialItemType}:`;
-      this.windowIsSpecial();
     } else if (comp === 'tag') {
       statement = `${tag}:`;
       this.windowIsTags(tag);
@@ -161,18 +185,13 @@ class PictureDisplayApp extends React.Component {
     this.setState({
       flexPicsIs: statement
     })
-
     this.toggleWindowOpen();
   }
 
-  windowIsMain (id) {
+  windowIsMain (currentPhotoObjectIndex) {
     let fullMain = [];
-    fullMain.push(id === undefined ? this.state.photos[this.state.mainPhotoId].imgFullUrl : this.state.photos[id].imgFullUrl);
-    let photo = this.state.mainPhoto;
-    let photoId = this.state.mainPhotoId;
+    fullMain.push(this.state.windowFullSizePhotos[currentPhotoObjectIndex]);
     this.setState({
-      windowFullSizeId: photoId,
-      windowFullSizePic: photo,
       windowOpen: true,
       flexedPics: fullMain,
       isFullSize: true
@@ -218,23 +237,6 @@ class PictureDisplayApp extends React.Component {
     })
   }
 
-  //currently not in use
-  windowIsSpecial () {
-    let specialItems = this.state.photos.map((photo) => {
-      return photo.special.specialItem;
-    })
-    this.setState({
-      flexedPics: specialItems,
-      isFullSize: true
-    })
-    //REFACTOR WHEN USING SPECIAL MEDIA TYPES
-    if (this.state.photos.special.specialItemType === 'panorama') {
-
-    } else if (this.state.photos.special.specialItemType === 'video') {
-
-    }
-  }
-
   windowIsTags (tag) {
     let tagArray = this.state.tags[tag] === undefined ? [] : this.state.tags[tag];
       let tagPhotoArray = tagArray.map((photo) => {
@@ -247,27 +249,22 @@ class PictureDisplayApp extends React.Component {
   }
 
   setHotelState(data) {
-
+    this.setState({
+      currentHotel: data.name
+    })
   }
 
   setUpPhotoStates(data) {
-    let sortedPhotos = data.sort((photoObj1, photoObj2) => {
-      let id1 = this.getIdFromMainImgUrl(photoObj1.imgMainUrl);
-      let id2 = this.getIdFromMainImgUrl(photoObj2.imgMainUrl);
-      return id1 - id2;
-    });
-    this.setState({ photos: sortedPhotos });
-    this.setState({ mainPhoto: data[0].imgMainUrl });
-    this.setState({ miniGrid: data.slice(0, 20) });
+    this.setState({
+      photos: data.photoObjects,
+      windowFullSizePhotos: data.FullPhotos,
+      mainGalleryPhotos: data.MainPhotos,
+      miniGrid: data.ThumbnailPhotos.slice(0, 20)
+    })
   }
 
   setUpUserState(data) {
-    let userArr = [];
-
-    data.map((photoObj, i) => {
-      userArr.push(photoObj.user);
-    })
-
+    let userArr = data.users;
     userArr = _.uniq(userArr);
     userArr.sort();
     this.setState({ users: userArr });
@@ -277,10 +274,8 @@ class PictureDisplayApp extends React.Component {
     let tagObj = {};
     let most = 0;
     let secondMost = 0;
-    let tagArr = [];
     let tagAlbumArr = [];
-
-    data.map((photoObj, i) => {
+    data.photoObjects.map((photoObj, i) => {
       if (tagObj[photoObj.tag] === undefined) {
         let tempTagObj = {};
         tempTagObj.tag = photoObj.tag;
@@ -294,7 +289,6 @@ class PictureDisplayApp extends React.Component {
       }
     })
     for (let key in tagObj) {
-      tagArr.push(key);
       if (tagObj[key].length > most) {
         if (most !== 0) {
           secondMost = most;
@@ -308,13 +302,9 @@ class PictureDisplayApp extends React.Component {
       }
     }
 
-    tagObj.tags = tagArr;
+    tagObj.tags = data.tags;
     tagObj.albums = tagAlbumArr;
     this.setState({ tags: tagObj });
-  }
-
-  setUpSpecialMediaState(data) {
-    this.setState({ special: data });
   }
 
   componentDidMount () {
@@ -323,11 +313,11 @@ class PictureDisplayApp extends React.Component {
       method: 'GET'
     })
     .then((res) => {
-      this.setHotelState(res.data);
-      this.setUpPhotoStates(res.data);
-      this.setUpUserState(res.data);
-      this.setUpTagsState(res.data);
-      this.setUpSpecialMediaState(res.data);
+      console.log(res.data[0]);
+      this.setHotelState(res.data[0]);
+      this.setUpPhotoStates(res.data[0]);
+      this.setUpUserState(res.data[0]);
+      this.setUpTagsState(res.data[0]);
     })
     .catch((err) => {
       throw err;
@@ -336,7 +326,7 @@ class PictureDisplayApp extends React.Component {
 
   renderingSections () {
 
-    if (this.state.tags === undefined || this.state.special === undefined) {
+    if (this.state.tags === undefined) {
       return (
         <div></div>
       )
@@ -348,25 +338,31 @@ class PictureDisplayApp extends React.Component {
           <div>
             <PictureMainViewer>
               <MainPic
-              photo={this.state.mainPhoto === undefined ? 'Loading...' : this.state.mainPhoto}
+              photos={this.state.mainGalleryPhotos === undefined ? ['Loading...'] : this.state.mainGalleryPhotos}
+              MainGalleryPicture={this.state.mainGalleryPhotos[this.state.currentMainPhotoIndex]}
+              toggleWindowMain={this.setWindowContent.bind(this)}
               changeMainPic={this.changeMainPic.bind(this)}
-              mainPhotoId={this.state.mainPhotoId}
-              photos={this.state.photos === undefined ? ['Loading...'] : this.state.photos}
-              toggleWindowMain={this.setWindowContent.bind(this, 'main')}/>
+              />
             </PictureMainViewer>
             <PictureMiniGrid>
               {
-                this.state.miniGrid.map((photoObj, index) => {
+                this.state.miniGrid.map((photoUrl, index) => {
 
                   return (
-                    <Thumbnail photo={photoObj.imgThumbUrl} id={index} changePic={this.changeMainPic.bind(this)} style={{position: 'absolute'}} key={photoObj.imgThumbUrl}/>
+                    <Thumbnail photo={photoUrl} id={index} changePic={this.changeMainPic.bind(this)} style={{position: 'absolute'}} key={photoUrl}/>
                     )
                   })
                 }
             </PictureMiniGrid>
           </div>
           <PictureSideGrid>
-            <SidebarPics winMost={this.setWindowContent.bind(this, 'most')} winSecMost={this.setWindowContent.bind(this, 'secMost')} winUser={this.setWindowContent.bind(this, 'user')} winSpec={this.setWindowContent.bind(this, 'special')} users={this.state.users === undefined ? ['Loading...'] : this.state.users} tags={this.state.tags} special={this.state.special} photos={this.state.photos === undefined ? ['Loading...'] : this.state.photos}/>
+            <SidebarPics
+            winMost={this.setWindowContent.bind(this, 'most')}
+            winSecMost={this.setWindowContent.bind(this, 'secMost')}
+            winUser={this.setWindowContent.bind(this, 'user')}
+            users={this.state.users === undefined ? ['Loading...'] : this.state.users}
+            tags={this.state.tags}
+            photos={this.state.mainGalleryPhotos === undefined ? ['Loading...'] : this.state.mainGalleryPhotos}/>
           </PictureSideGrid>
         </PictureContainer>
         <PopUpWindow
@@ -375,8 +371,8 @@ class PictureDisplayApp extends React.Component {
           setWindowContent={this.setWindowContent.bind(this)}
           flexPicsIs={this.state.flexPicsIs}
           isFullSize={this.state.isFullSize}
-          changeMainPic={this.changeMainPic.bind(this)}
-          mainPhotoId={this.state.windowFullSizeId}
+          changeFullPic={this.changeFullPic.bind(this)}
+          mainPicIndex={this.state.currentFullSizePhotoIndex}
           flexedPics={this.state.flexedPics === undefined ? [] : this.state.flexedPics}
           photos={this.state.photos}
       />
