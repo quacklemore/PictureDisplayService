@@ -5,12 +5,12 @@ const _ = require('underscore');
 const mongoUri = require('./mongouri.js');
 const Hotel = require('./Photo.js');
 
-// mongoose.connect(mongoUri, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// }, (err) => {
-//   mongoose.connection.dropDatabase()
-// });
+mongoose.connect(mongoUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}, (err) => {
+  mongoose.connection.dropDatabase()
+});
 
 const saveOneHotel = (hotel) => {
   return new Promise((resolve, reject) => {
@@ -34,31 +34,19 @@ const seed = () => {
     let mainImgSizeArray = [];
     let userArray = [];
     let hotelObj = {};
+    let arrayOfRandom = [];
 
-    let randNum = (25 + Math.random() * (58 - 25));
-    let bool = (Math.random() > 0.5) ? true : false; //DO I NEED
-    let gamble = Math.random();//DO I NEED
-
-    let totalNumberOfPictures = Array.from(Array(58).keys());
-    let arrayOfRandom = totalNumberOfPictures.map((nothing, index) => {
-    let randNum = (Math.floor(Math.random() * 58 + 1));
-      return randNum;
-    });
-    arrayOfRandom = _.uniq((arrayOfRandom));
-    let length = arrayOfRandom.length;
-
-    let tags = ['dogs', 'beach', 'sunshine', 'Wonderful', 'Good Food', 'happy', 'sandwich', 'beach life', 'Perfection', 'Okay', 'Passable', 'Overpriced', 'Meh', 'Too Sunny', 'Glaringly Beautiful'];
-    let tagsNum = Math.floor(Math.random() * (tags.length - 1));
-    let tagsNumArray = [];
-    for (let i = 0; i < tagsNum; i++) {
-      tagsNumArray.push(Math.floor(Math.random() * tags.length));
+    while (arrayOfRandom.length < 24) {
+      arrayOfRandom = getRandomNumberArray();
     }
 
-    tagsForThisHotel = tagsNumArray.map((number) => {
-      return tags[number];
-    })
+    hotelObj.tags = [];
+    while (hotelObj.tags.length < 3) {
+      hotelObj.tags = getTagsArray();
+    }
 
-    hotelObj.tags = _.uniq((tagsForThisHotel));
+    let length = arrayOfRandom.length;
+
     hotelObj.name = 'hotel' + i;
 
     for (let x = 1; x <= length; x++) {
@@ -96,6 +84,31 @@ const seed = () => {
   .catch((err) => {
     throw err;
   })
+}
+
+const getTagsArray = () => {
+  let tags = ['dogs', 'beach', 'sunshine', 'Wonderful', 'Good Food', 'happy', 'sandwich', 'beach life', 'Perfection', 'Okay', 'Passable', 'Overpriced', 'Meh', 'Too Sunny', 'Glaringly Beautiful'];
+  let tagsNum = Math.floor(Math.random() * (tags.length - 1));
+  let tagsNumArray = [];
+  for (let i = 0; i < tagsNum; i++) {
+    tagsNumArray.push(Math.floor(Math.random() * tags.length));
+  }
+  tagsForThisHotel = tagsNumArray.map((number) => {
+    return tags[number];
+  })
+  return _.uniq((tagsForThisHotel));
+};
+
+const getRandomNumberArray = () => {
+  let randNum = (25 + Math.random() * (58 - 25));
+  let totalNumberOfPictures = Array.from(Array(58).keys());
+  let arrayOfRandom = totalNumberOfPictures.map((nothing, index) => {
+  let randNum = (Math.floor(Math.random() * 58 + 1));
+    return randNum;
+  });
+  arrayOfRandom = _.uniq((arrayOfRandom));
+
+  return arrayOfRandom;
 }
 
 seed();

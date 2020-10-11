@@ -333,10 +333,11 @@ class PictureDisplayApp extends React.Component {
 
   componentDidMount () {
     axios({
-      url: `/api/pictures/${this.state.currentHotel}`,
+      url: `/api/pictures/${this.props.hotelId === undefined ? this.state.currentHotel : this.props.hotelId}`,
       method: 'GET'
     })
     .then((res) => {
+      console.log(res.data[0]);
       this.setHotelState(res.data[0]);
       this.setUpPhotoStates(res.data[0]);
       this.setUpUserState(res.data[0]);
