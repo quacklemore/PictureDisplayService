@@ -333,7 +333,7 @@ class PictureDisplayApp extends React.Component {
 
   componentDidMount () {
     axios({
-      url: `/api/pictures/${this.props.hotelId}`,
+      url: `/api/pictures/${this.props.hotelId === "" ? 'hotel0' : this.props.hotelId}`,
       method: 'GET'
     })
     .then((res) => {
@@ -365,6 +365,7 @@ class PictureDisplayApp extends React.Component {
               MainGalleryPicture={this.state.mainGalleryPhotos[this.state.currentMainPhotoIndex]}
               toggleWindowMain={this.setWindowContent.bind(this)}
               changeMainPic={this.changeMainPic.bind(this)}
+              winUser={this.setWindowContent.bind(this, 'user')}
               />
             </PictureMainViewer>
             <PictureMiniGrid>

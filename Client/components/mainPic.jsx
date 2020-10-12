@@ -104,6 +104,9 @@ const ViewAllCamera = styled.img`
   bottom: 4%;
   left: 5%;
 `;
+const ViewAllWrapper = styled.div`
+  z-index: 10;
+`;
 
 const MainGalleryImage = styled.img`
   width: 600px;
@@ -111,7 +114,7 @@ const MainGalleryImage = styled.img`
   object-fit: cover;
 `;
 
-const PictureMainViewer = ({changeMainPic, toggleWindowMain, photos, MainGalleryPicture}) => {
+const PictureMainViewer = ({changeMainPic, toggleWindowMain, photos, MainGalleryPicture, winUser}) => {
   if (photos === undefined) {
     return (
       <div></div>
@@ -134,10 +137,12 @@ const PictureMainViewer = ({changeMainPic, toggleWindowMain, photos, MainGallery
                 &#x2922;  Full View
             </MainPicFullView>
           </MainPicFullViewBox>
-          <ViewAllCamera src={'https://tripadcoba.s3-us-west-1.amazonaws.com/camera-512.png'} />
-          <ViewAllWithNumber>
-            View all {photos !== undefined ? photos.length : 0} Photos
-          </ViewAllWithNumber>
+          <ViewAllWrapper onClick={winUser}>
+            <ViewAllCamera src={'https://tripadcoba.s3-us-west-1.amazonaws.com/camera-512.png'} onClick={winUser}/>
+            <ViewAllWithNumber onClick={winUser}>
+              View all {photos !== undefined ? photos.length : 0} Photos
+            </ViewAllWithNumber>
+          </ViewAllWrapper>
           <MainGalleryImage src={MainGalleryPicture} onClick={() => {
             toggleWindowMain();
           }}/>
