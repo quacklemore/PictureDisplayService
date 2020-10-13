@@ -46,6 +46,8 @@ Possible issues (don't allow these to happen):
   - not having at least two tags to render the sidebar properly
   - having fewer than 23 pictures associated with a hotel
 
+  *** Please note! If you are working to seed the database with my initial script, you will need to change the mongoURI to normal localhost mongodb path as I am not uploading my mongoURI. Also the exact links to the picture bucket may not be accessible past 10/13/20, so feel free to make your own paths and such.
+
 This module is a complex beast but if you feed it what it wants, it should do your bidding.
 
 If you have any issues not associated with what has been listed on this page, please contact the developer: Susannah Marcus
