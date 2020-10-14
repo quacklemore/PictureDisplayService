@@ -3,6 +3,7 @@ const db = require('./db.js');
 const faker = require('faker');
 const _ = require('underscore');
 const mongoUri = require('./mongouri.js');
+const imagesLink = require('./imageLink.js');
 const Hotel = require('./Photo.js');
 
 mongoose.connect(mongoUri, {
@@ -52,12 +53,12 @@ const seed = () => {
     for (let x = 1; x <= length; x++) {
       let imageNum = arrayOfRandom.pop();
       let image = {};
-      image.imgMainUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/main${imageNum}.jpg`;
-      image.imgFullUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/full${imageNum}.jpg`;
-      image.imgThumbUrl = `https://tripadcoba.s3-us-west-1.amazonaws.com/thumb${imageNum}.jpg`;
-      mainImgSizeArray.push(`https://tripadcoba.s3-us-west-1.amazonaws.com/main${imageNum}.jpg`);
-      fullSizeArray.push(`https://tripadcoba.s3-us-west-1.amazonaws.com/full${imageNum}.jpg`);
-      thumbnailArray.push(`https://tripadcoba.s3-us-west-1.amazonaws.com/thumb${imageNum}.jpg`);
+      image.imgMainUrl = `${imagesLink}main${imageNum}.jpg`;
+      image.imgFullUrl = `${imagesLink}full${imageNum}.jpg`;
+      image.imgThumbUrl = `${imagesLink}thumb${imageNum}.jpg`;
+      mainImgSizeArray.push(`${imagesLink}main${imageNum}.jpg`);
+      fullSizeArray.push(`${imagesLink}full${imageNum}.jpg`);
+      thumbnailArray.push(`${imagesLink}thumb${imageNum}.jpg`);
 
       image.uploadDate = new Date();
       image.user = faker.name.firstName() + faker.name.lastName();
