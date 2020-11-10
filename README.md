@@ -1,5 +1,5 @@
 # PictureDisplayService
-![image](http://i.imgur.com/WbYkyIhh.gif)
+[Imgur](https://imgur.com/WbYkyIh)
 
 Hello! Welcome to the page for more information on the gallery display module for the Trip AdCoba site.
 
