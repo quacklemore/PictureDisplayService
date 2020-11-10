@@ -1,4 +1,7 @@
 # PictureDisplayService
+![image](https://i.imgur.com/cpLWd4w.png)
+
+#### Gif of module in action:
 [Imgur](https://imgur.com/WbYkyIh)
 
 Hello! Welcome to the page for more information on the gallery display module for the Trip AdCoba site.
